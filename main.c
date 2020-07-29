@@ -15,7 +15,7 @@
 
 #define DUTY_CYCLE 3750
 #define X_GOAL 1
-#define Y_GOAL 1
+#define Y_GOAL 0
 #define CONTROL_PERIOD 2500
 
 // initialize the robot data structure
@@ -80,7 +80,7 @@ void main(void)
     motor_init();
     motor_forward(DUTY_CYCLE, DUTY_CYCLE);
     tachometer_init(&leftTachometer, &rightTachometer);
-    go_to_goal_init(X_GOAL,Y_GOAL, &robot,CONTROL_PERIOD);
+    go_to_goal_init(X_GOAL - (.1 * X_GOAL),Y_GOAL + (.1 * Y_GOAL), &robot,CONTROL_PERIOD);
 
     enableInterrupts();
 
