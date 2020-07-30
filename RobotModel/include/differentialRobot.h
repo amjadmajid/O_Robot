@@ -17,6 +17,13 @@
 #define TICK_DIS_NUMERATOR 61       // to avoid float operation split the fraction 0.61
 #define TICK_DIS_DENOMINATOR 100000    // consequently you much multiply and then divide
 
+typedef struct ir_distances{
+    uint32_t ir_left;
+    uint32_t ir_center;
+    uint32_t ir_right;
+
+}ir_distance_t;
+
 typedef struct tachometer{
     volatile float delta_dis;     // distance crossed between to updates in meter
     volatile uint16_t ticks;
@@ -40,6 +47,7 @@ typedef struct wheel
 typedef struct differential_robot
 {
     float base_len;  // the distance between the two wheels in millimeters
+    ir_distance_t * ir_distance;
     pose_t * pose;
     wheel_t * right;
     wheel_t * left;

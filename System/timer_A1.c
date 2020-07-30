@@ -6,7 +6,8 @@
 
 #include "msp.h"
 
-void (*timerA1Task)(void);   // a hook for user defined function
+
+void (*timerA1_task)(void);   // a hook for user defined function
 
 /** -------------- TimerA1_Init ---------------
  * Initialize Timer A1 to run user task periodically
@@ -18,7 +19,7 @@ void timerA1_init(void(*task)(void), uint16_t period){
 
 	// Hook the user task to the callback
     P1->DIR |=BIT0;
-	timerA1Task = task;
+    timerA1_task = task;
 
 	TIMER_A1->CTL &=~0x0030;  // MC=00b, halt timer A1
 	TIMER_A1->CTL |= 0x0200;  // TASSL=10b, use SMCLK (max speed 12MHz)
@@ -52,7 +53,7 @@ void timerA1_stop(void){
 
 void TA1_0_IRQHandler(void){
 	TIMER_A1->CCTL[0] &=~0x0001; // clear the interrupt flag
-	(*timerA1Task)();
+	(*timerA1_task)();
 }
 
 

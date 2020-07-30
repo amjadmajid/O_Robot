@@ -11,6 +11,8 @@
 #include "msp.h"
 #include "timer_A1.h"
 #include "motor.h"
+#include "ir_distance.h"
+#include "lpf.h"
 
 
 
@@ -26,7 +28,7 @@ void duty_check(){
 
 }
 
-//******************************************************
+
 double E_i=0;
 float K_i = 0;
 float K_p = 566;
@@ -35,8 +37,9 @@ float _x_goal;
 float _y_goal;
 differential_robot_t * _robot;
 
+uint32_t ir_left[500]={0};
 
-void go_to_goa_controller(){
+void go_to_goal_controller(){
 
 //    int32_t v = sqrt((x_goal * x_goal)+(y_goal * y_goal ))  ; // reach the goal in 10 s
     int32_t v = 200;
@@ -117,13 +120,36 @@ void go_to_goa_controller(){
         __no_operation();
     }
     time++;
+
+    // updating the IR distance measurements
+    ir_distances(&(_robot->ir_distance->ir_left),&(_robot->ir_distance->ir_center),&(_robot->ir_distance->ir_right) );
+
+    // Debugging
+    if (time <500){
+        ir_left[time] = _robot->ir_distance->ir_left;
+    }
+
 }
 
 void go_to_goal_init(float x_g, float y_g, differential_robot_t * robot_pt, uint16_t p){
     _x_goal = x_g;
     _y_goal = y_g;
     _robot = robot_pt;
-    timerA1_init(&go_to_goa_controller, p);
+    timerA1_init(&go_to_goal_controller, p);
+
+    // initialize the ADC for the IR distance sensor
+    uint32_t *init_left=NULL;
+    uint32_t * init_center=NULL;
+    uint32_t * init_right=NULL;
+
+    adc_init_channel_17_12_16();
+    read_adc_17_12_16(init_left,init_center,init_right);
+
+    // initialize the Low Pass Filters for the ir distance sensors
+    LPF_Init(*init_left,32);     // P9.0/channel 17
+    LPF_Init2(*init_center,32);    // P4.1/channel 12
+    LPF_Init3(*init_right,32);    // P9.1/channel 16
+
     time=0;
 }
 

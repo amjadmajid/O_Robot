@@ -12,7 +12,7 @@
 #include "timer_A1.h"
 #include "interruptHandler.h"
 
-
+#define MAX_IR 800 // max ir distances in mm
 #define DUTY_CYCLE 3750
 #define X_GOAL 1
 #define Y_GOAL 0
@@ -40,42 +40,49 @@ void rightTachometer(void){
   right_tachometer.ticks = tks;
 }
 
-void buttons_init(void){
+uint8_t read_buttons(){
+    // P1->IN works in a negative logic fashion
+    return (~(P1->IN) & (BIT1+BIT4));
+}
+
+void press_buttons_to_go(void){
     P1->SEL0 &= ~(BIT1+BIT4);
     P1->SEL1 &= ~(BIT1+BIT4);
     P1->DIR &= ~(BIT1+BIT4);
     P1->REN |=  (BIT1+BIT4);
     P1->OUT |=  (BIT1+BIT4); // pull-up resistors
+
+    while( read_buttons() == 0x00 ) ; // wait for press
+    while( read_buttons() != 0x00 ) ; // wait for release
 }
 
-uint8_t press_to_go(){
-    // P1->IN works in a negative logic fashion
-    return (~(P1->IN) & (BIT1+BIT4));
+void robot_init()
+{
+    right_wheel.radius = RADIUS;
+    right_wheel.ticks_per_rev = 0;
+    right_wheel.tachometer = &right_tachometer;
+    left_wheel.radius = RADIUS;
+    left_wheel.ticks_per_rev = 0;
+    left_wheel.tachometer = &left_tachometer;
+    robot.base_len = L;
+    robot.right = &right_wheel;
+    robot.left = &left_wheel;
+    robot.pose = &pose;
+    robot.ir_distance->ir_left = MAX_IR;
+    robot.ir_distance->ir_center = MAX_IR;
+    robot.ir_distance->ir_right = MAX_IR;
 }
 
 void main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
+
     disableInterrupts();
 
-    right_wheel.radius = RADIUS;
-    right_wheel.ticks_per_rev = 0;
-    right_wheel.tachometer = &right_tachometer;
-
-    left_wheel.radius = RADIUS;
-    left_wheel.ticks_per_rev = 0;
-    left_wheel.tachometer = &left_tachometer;
-
-    robot.base_len = L;
-    robot.right = &right_wheel;
-    robot.left  = &left_wheel;
-    robot.pose = &pose;
-
+    robot_init();
     clock_init_48MHz();
 
-    buttons_init();
-    while( press_to_go() == 0x00 ) ; // wait for press
-    while( press_to_go() != 0x00 ) ; // wait for release
+    press_buttons_to_go();
 
     motor_init();
     motor_forward(DUTY_CYCLE, DUTY_CYCLE);
