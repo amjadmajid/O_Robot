@@ -33,7 +33,7 @@ void duty_check(){
 
 double E_i=0;
 float K_i = 0;
-float K_p = 116;
+float K_p = 86;
 
 float _x_goal;
 float _y_goal;
@@ -97,22 +97,22 @@ void go_to_goal_controller(){
     float static back_flag = 0;
     if ( x_err < .05 && y_err <.05 ){
 
-        _x_goal = 1;
-        _y_goal = -1;
+//        _x_goal = 1;
+//        _y_goal = -1;
 
 //        if(back_flag==1){
 //            _x_goal = -.5;
 //            _y_goal = -.5;
 //        }
 
-        if (back_flag==1){
+//        if (back_flag==1){
             motor_stop();
             timerA1_stop();
             printf("Arrived");
             __no_operation();
-        }
+//        }
 
-        back_flag++;
+//        back_flag++;
     }
 
     if(time == 150000 ){

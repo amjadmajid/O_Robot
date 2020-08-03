@@ -86,7 +86,8 @@ void main(void)
     motor_init();
     motor_forward(DUTY_CYCLE, DUTY_CYCLE);
     tachometer_init(&leftTachometer, &rightTachometer);
-    go_to_goal_init(X_GOAL - (.1 * X_GOAL),Y_GOAL + (.1 * Y_GOAL), &robot,CONTROL_PERIOD);
+//    go_to_goal_init(X_GOAL - (.1 * X_GOAL),Y_GOAL + (.1 * Y_GOAL), &robot,CONTROL_PERIOD);
+    go_to_goal_init(X_GOAL, Y_GOAL , &robot,CONTROL_PERIOD);
 
     enableInterrupts();
 
