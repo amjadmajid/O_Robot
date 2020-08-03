@@ -4,10 +4,12 @@
  * Email : amjad.y.majid@gmail.com
  */
 
-#include <differentialRobot.h>
+
 #include <stdint.h>
 #include <stdio.h>
 #include <math.h>
+
+#include "differentialRobot.h"
 #include "msp.h"
 #include "timer_A1.h"
 #include "motor.h"
@@ -31,7 +33,7 @@ void duty_check(){
 
 double E_i=0;
 float K_i = 0;
-float K_p = 566;
+float K_p = 116;
 
 float _x_goal;
 float _y_goal;
@@ -125,8 +127,8 @@ void go_to_goal_controller(){
     ir_distances(&(_robot->ir_distance->ir_left),&(_robot->ir_distance->ir_center),&(_robot->ir_distance->ir_right) );
 
     // Debugging
-    if (time <500){
-        ir_left[time] = _robot->ir_distance->ir_left;
+    if (time < 1500 && time > 1000  ){
+        ir_left[time-1000] = _robot->ir_distance->ir_left;
     }
 
 }

@@ -22,6 +22,7 @@
 tachometer_t right_tachometer = {0,0,0};
 tachometer_t left_tachometer = {0,0,0};
 pose_t pose = {0,0,0};  // initial position of the robot
+ir_distance_t ir_distance = {MAX_IR,MAX_IR,MAX_IR};
 
 wheel_t right_wheel;
 wheel_t left_wheel;
@@ -68,9 +69,7 @@ void robot_init()
     robot.right = &right_wheel;
     robot.left = &left_wheel;
     robot.pose = &pose;
-    robot.ir_distance->ir_left = MAX_IR;
-    robot.ir_distance->ir_center = MAX_IR;
-    robot.ir_distance->ir_right = MAX_IR;
+    robot.ir_distance = &ir_distance;
 }
 
 void main(void)
