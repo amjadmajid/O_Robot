@@ -32,8 +32,8 @@ void duty_check(){
 
 
 double E_i=0;
-float K_i = 0;
-float K_p = 490;
+float K_i = 5;
+float K_p = 50;
 
 float _x_goal;
 float _y_goal;
@@ -42,10 +42,9 @@ differential_robot_t * _robot;
 uint32_t ir_left[500]={0};
 
 //    int32_t v = sqrt((x_goal * x_goal)+(y_goal * y_goal ))  ; // reach the goal in 10 s
-    int32_t v = 150;
-
-int32_t linear_velocity = 30;// v * 2
-float meter_per_rev =  0.07; // RADIUS * 2
+//    int32_t v = 150;
+//int32_t linear_velocity = 30;// v * 2
+//float meter_per_rev =  0.07; // RADIUS * 2
 
 float theta_goal;
 
@@ -54,10 +53,10 @@ void go_to_goal_controller(){
     float heading_error = theta_goal - _robot->pose->theta;
     float err = (float) atan2(sin(heading_error), cos(heading_error));
     // float err = atan2(sin(theta_goal), cos(theta_goal));
-//    E_i +=err;
-//    float U_i =  (K_i * E_i);
+    E_i +=err;
+    float U_i =  (K_i * E_i);
     float U_p =  (K_p * err);
-    float w = U_p ; // + U_i;
+    float w = U_p + U_i;
 
 //    left_duty_cycle = (linear_velocity - w * L )/(meter_per_rev);
 //    right_duty_cycle = (linear_velocity + w * L )/(meter_per_rev);
@@ -69,8 +68,8 @@ void go_to_goal_controller(){
     uint32_t static printf_flag=10;
     if(printf_flag==10){
 //    printf("tg=%.4f e=%.4f w=%.4f ldc=%d rdc=%d\n",theta_goal, err, w, left_duty_cycle,right_duty_cycle);
-//    printf("tg=%.4f ldc=%d rdc=%d\n",theta_goal, left_duty_cycle,right_duty_cycle);
-      printf("e=%.4f te=%.4f\n", err, heading_error);
+    printf("tg=%.4f tr=%.4f \n",err,_robot->pose->theta);
+//      printf("e=%.4f te=%.4f\n", err, heading_error);
     printf_flag=0;
     }
     printf_flag++;
@@ -116,11 +115,6 @@ void go_to_goal_controller(){
             printf("Arrived");
             __no_operation();
 //        }
-<<<<<<< HEAD
-//
-=======
-
->>>>>>> b1c4a31627a390ad00363e5bfce0a2e16ee7dcbf
 //        back_flag++;
     }
 
@@ -147,8 +141,8 @@ void go_to_goal_init(float x_g, float y_g, differential_robot_t * robot_pt, uint
     _y_goal = y_g;
     _robot = robot_pt;
 
-    float delta_x = _x_goal - _robot->pose->x;
-    float delta_y = _y_goal - _robot->pose->y;
+    int32_t delta_x = _x_goal - _robot->pose->x;
+    int32_t delta_y = _y_goal - _robot->pose->y;
     theta_goal = (float) atan2(delta_y, delta_x);
 
     timerA1_init(&go_to_goal_controller, p);
