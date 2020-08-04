@@ -18,7 +18,7 @@
  * Output signal is toggled when Timer_A matches the duty cycle (TA0CCR3 or TA0CCR4).
  * The PWM signals are outputted on P2.6 and P2.7
  */
-void pwm_init(uint16_t period, uint16_t dutyCycle){
+void pwm_init(uint32_t period, uint32_t dutyCycle){
 
   if (dutyCycle >= period) return; //invalid duty cycles
 
@@ -46,7 +46,7 @@ void pwm_init(uint16_t period, uint16_t dutyCycle){
 /**
  * Set the duty cycle for the left motor
  */
-void set_left_duty_cycle(uint16_t dutyCycle){
+void set_left_duty_cycle(uint32_t dutyCycle){
   if(dutyCycle >= PWM_SIGNAL_PERIOD) return; //invalid duty cycles
   LEFT_MOTOR_POWER = dutyCycle;
 }
@@ -54,7 +54,7 @@ void set_left_duty_cycle(uint16_t dutyCycle){
 /**
  * Set the duty cycle for the right motor
  */
-void set_right_duty_cycle(uint16_t dutyCycle){
+void set_right_duty_cycle(uint32_t dutyCycle){
   if(dutyCycle >= PWM_SIGNAL_PERIOD ) return; //invalid duty cycles
   RIGHT_MOTOR_POWER = dutyCycle;
 }

@@ -27,7 +27,7 @@ void motor_stop (void);
  *@params: rightDutyCycle sets the duty cycle for the right motor.
  *@return: none
  */
-void motor_forward(uint16_t leftDutyCycle, uint16_t rightDutyCycle);
+void motor_forward(uint32_t leftDutyCycle, uint32_t rightDutyCycle);
 
 /** ------------motor_right------------
  *@brief : make the robot do a hard right turn by spinning the motors in a 
@@ -36,7 +36,7 @@ void motor_forward(uint16_t leftDutyCycle, uint16_t rightDutyCycle);
  *@params: rightDutyCycle sets the duty cycle of the right motor.
  *@return: none
  */
-void motor_right(uint16_t leftDutyCycle, uint16_t rightDutyCycle);
+void motor_right(uint32_t leftDutyCycle, uint32_t rightDutyCycle);
 
 /** ------------motor_left------------
  *@brief : make the robot do a hard left turn by spinning the motors in a 
@@ -45,7 +45,7 @@ void motor_right(uint16_t leftDutyCycle, uint16_t rightDutyCycle);
  *@params: rightDutyCycle sets the duty cycle of the right motor.
  *@return: none
  */
-void motor_left(uint16_t leftDutyCycle, uint16_t rightDutyCycle);
+void motor_left(uint32_t leftDutyCycle, uint32_t rightDutyCycle);
 
 /** ------------motor_backward------------
  *@brief : move the robot backward on a straight line or curve.
@@ -53,7 +53,7 @@ void motor_left(uint16_t leftDutyCycle, uint16_t rightDutyCycle);
  *@params: rightDutyCycle sets the duty cycle for the right motor.
  *@return: none
  */
-void motor_backward(uint16_t leftDutyCycle, uint16_t rightDutyCycle);
+void motor_backward(uint32_t leftDutyCycle, uint32_t rightDutyCycle);
 
 #endif /* SYSTEM_INCLUDE_MOTOR_H_ */
 

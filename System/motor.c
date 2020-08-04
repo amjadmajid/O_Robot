@@ -37,7 +37,7 @@ void motor_stop(void){
   set_right_duty_cycle(0);
 }
 
-void motor_right(uint16_t leftDutyCycle, uint16_t rightDutyCycle){
+void motor_right(uint32_t leftDutyCycle, uint32_t rightDutyCycle){
   set_left_duty_cycle(leftDutyCycle);
   set_right_duty_cycle(rightDutyCycle);
   DIRECTION &= ~BIT7;
@@ -46,7 +46,7 @@ void motor_right(uint16_t leftDutyCycle, uint16_t rightDutyCycle){
   POWER     |=(BIT6|BIT7);
 }
 
-void motor_left(uint16_t leftDutyCycle, uint16_t rightDutyCycle){
+void motor_left(uint32_t leftDutyCycle, uint32_t rightDutyCycle){
   set_left_duty_cycle(leftDutyCycle);
   set_right_duty_cycle(rightDutyCycle);
   DIRECTION |= BIT7;
@@ -55,7 +55,7 @@ void motor_left(uint16_t leftDutyCycle, uint16_t rightDutyCycle){
   POWER     |=(BIT6|BIT7);
 }
 
-void motor_backward(uint16_t leftDutyCycle, uint16_t rightDutyCycle){
+void motor_backward(uint32_t leftDutyCycle, uint32_t rightDutyCycle){
   set_left_duty_cycle(leftDutyCycle);
   set_right_duty_cycle(rightDutyCycle);
   DIRECTION |=(BIT6|BIT7);
@@ -64,7 +64,7 @@ void motor_backward(uint16_t leftDutyCycle, uint16_t rightDutyCycle){
 }
 
 
-//void motor_forward(uint16_t leftDutyCycle, uint16_t rightDutyCycle){
+//void motor_forward(uint32_t leftDutyCycle, uint32_t rightDutyCycle){
 //  set_left_duty_cycle(leftDutyCycle);
 //  set_right_duty_cycle(rightDutyCycle);
 //  DIRECTION &= ~(BIT6|BIT7);   // reverse movement direction to go forward
@@ -72,16 +72,16 @@ void motor_backward(uint16_t leftDutyCycle, uint16_t rightDutyCycle){
 //  POWER     |=(BIT6|BIT7);
 //}
 
-void motor_forward(int16_t leftDuty, int16_t rightDuty){
+void motor_forward(int32_t leftDuty, int32_t rightDuty){
 
     if(leftDuty < 0 && rightDuty < 0){
-        motor_backward(leftDuty*-1 , rightDuty*-1);
+        motor_backward((uint32_t) (leftDuty*-1) , (uint32_t) (rightDuty*-1));
     }
     else if(leftDuty < 0) {
-        motor_left(leftDuty* -1 ,rightDuty);
+        motor_left((uint32_t)(leftDuty* -1) ,(uint32_t) rightDuty);
    }
     else if(rightDuty < 0){
-        motor_right(leftDuty,rightDuty * -1);
+        motor_right((uint32_t) leftDuty, (uint32_t)(rightDuty * -1));
    }else {
        // Go forward
        P1->OUT &= ~(BIT6|BIT7);
