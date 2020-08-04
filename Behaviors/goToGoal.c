@@ -116,7 +116,11 @@ void go_to_goal_controller(){
             printf("Arrived");
             __no_operation();
 //        }
+<<<<<<< HEAD
 //
+=======
+
+>>>>>>> b1c4a31627a390ad00363e5bfce0a2e16ee7dcbf
 //        back_flag++;
     }
 
