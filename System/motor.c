@@ -84,9 +84,10 @@ void motor_forward(int32_t leftDuty, int32_t rightDuty){
         motor_right((uint32_t) leftDuty, (uint32_t)(rightDuty * -1));
    }else {
        // Go forward
-       P1->OUT &= ~(BIT6|BIT7);
        set_left_duty_cycle(leftDuty);
        set_right_duty_cycle(rightDuty);
+
+       P1->OUT &= ~(BIT6|BIT7);
 
        P3->OUT |=(BIT6|BIT7);
        P2->OUT |=(BIT6|BIT7);

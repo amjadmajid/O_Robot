@@ -4,7 +4,7 @@
  * Email: amjad.y.majid@gmail.com
  */
 
-#include <differentialRobot.h>
+#include "differentialRobot.h"
 #include <stdio.h>
 #include <math.h>
 
@@ -45,12 +45,12 @@ void robot_position_update(differential_robot_t * robot){
     float d_l = robot->left->tachometer->delta_dis;
 	float d_c = _robot_distance_update_mm(d_r, d_l);
 
-//    uint16_t static printf_flag=30;
-//    printf_flag--;
-//    if(printf_flag==0){
+//    uint16_t static printf_flag=0;
+//    if(printf_flag==4){
 //    printf("d_r=%.4f d_l=%.4f d_c=%.4f\n",d_r, d_l, d_c);
-//    printf_flag=30;
+//    printf_flag=0;
 //    }
+//    printf_flag++;
 
 	float x = robot->pose->x;
 	float y = robot->pose->y;
@@ -65,12 +65,12 @@ void robot_position_update(differential_robot_t * robot){
 	robot->pose->y = y;
 	robot->pose->theta = atan2( sin(theta), cos(theta));
 
-//	uint16_t static printf_flag=50;
-//	printf_flag--;
-//	if(printf_flag==49){
-//	printf("x=%.4f y=%.4f theta=%.4f\n",x,y, theta);
-//	printf_flag=50;
-//	}
+	uint16_t static printf_flag=0;
+	if(printf_flag==4){
+	printf("x=%.4f y=%.4f theta=%.4f\n",x,y, theta);
+	printf_flag=0;
+	}
+	printf_flag++;
 }
 
 

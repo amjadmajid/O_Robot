@@ -32,7 +32,7 @@ void duty_check(){
 
 
 double E_i=0;
-float K_i = 5;
+float K_i = 1.6;
 float K_p = 50;
 
 float _x_goal;
@@ -61,14 +61,14 @@ void go_to_goal_controller(){
 //    left_duty_cycle = (linear_velocity - w * L )/(meter_per_rev);
 //    right_duty_cycle = (linear_velocity + w * L )/(meter_per_rev);
 
-    left_duty_cycle = (30000 - w * 14)/7 ;
-    right_duty_cycle = (30000 + w * 14)/7 ;
+    left_duty_cycle = (50000 - w * 14)/7 ;
+    right_duty_cycle = (50000 + w * 14)/7 ;
 
 
     uint32_t static printf_flag=10;
     if(printf_flag==10){
 //    printf("tg=%.4f e=%.4f w=%.4f ldc=%d rdc=%d\n",theta_goal, err, w, left_duty_cycle,right_duty_cycle);
-    printf("tg=%.4f tr=%.4f \n",err,_robot->pose->theta);
+//    printf("tg=%.4f tr=%.4f \n",err,_robot->pose->theta);
 //      printf("e=%.4f te=%.4f\n", err, heading_error);
     printf_flag=0;
     }
@@ -77,7 +77,6 @@ void go_to_goal_controller(){
     duty_check();
 
     motor_forward(right_duty_cycle, left_duty_cycle);
-
     robot_position_update(_robot);
 
 //    uint32_t static printf_flag=10;
@@ -98,7 +97,7 @@ void go_to_goal_controller(){
 //        printf_flag=0;
 //        }
 
-    float static back_flag = 0;
+//    float static back_flag = 0;
     if ( x_err < .05 && y_err <.05 ){
 
 //        _x_goal = 1;

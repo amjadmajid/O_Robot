@@ -27,7 +27,7 @@ void motor_stop (void);
  *@params: rightDutyCycle sets the duty cycle for the right motor.
  *@return: none
  */
-void motor_forward(uint32_t leftDutyCycle, uint32_t rightDutyCycle);
+void motor_forward(int32_t leftDutyCycle, int32_t rightDutyCycle);
 
 /** ------------motor_right------------
  *@brief : make the robot do a hard right turn by spinning the motors in a 

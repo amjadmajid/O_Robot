@@ -14,9 +14,9 @@
 
 #define MAX_IR 800 // max ir distances in mm
 #define DUTY_CYCLE 3750
-#define X_GOAL -4
+#define X_GOAL 4
 #define Y_GOAL 0
-#define CONTROL_PERIOD 2500
+#define CONTROL_PERIOD 5000
 
 // initialize the robot data structure
 tachometer_t right_tachometer = {0,0,0};
@@ -89,11 +89,12 @@ void main(void)
 //    go_to_goal_init(X_GOAL - (.1 * X_GOAL),Y_GOAL + (.1 * Y_GOAL), &robot,CONTROL_PERIOD);
     go_to_goal_init(X_GOAL ,Y_GOAL , &robot,CONTROL_PERIOD);
 
+    pwm_init(15000, 0);
 
     enableInterrupts();
 
 
-    pwm_init(15000, DUTY_CYCLE);
+
 
     while(1){
       waitForInterrupt();
