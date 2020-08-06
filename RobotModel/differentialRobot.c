@@ -9,14 +9,13 @@
 #include <math.h>
 
 float _robot_distance_update_mm(float d_r, float d_l){
-    float d_c = (d_r + d_l)/2;
-	return d_c;
+	return (d_r + d_l)/2;
 }
 
 
 void _wheel_distance_update_mm( tachometer_t * tachometer){
 	// calculate the distance travelled since the last update in millimeter 
-    uint32_t ticks = tachometer->ticks;
+    int32_t ticks = tachometer->ticks;
 	float delta_ticks = ticks - tachometer->prev_ticks;
 	// update the previous tachometer ticks
 	tachometer->prev_ticks = ticks;
@@ -65,12 +64,12 @@ void robot_position_update(differential_robot_t * robot){
 	robot->pose->y = y;
 	robot->pose->theta = atan2( sin(theta), cos(theta));
 
-	uint16_t static printf_flag=0;
-	if(printf_flag==4){
-	printf("x=%.4f y=%.4f theta=%.4f\n",x,y, theta);
-	printf_flag=0;
-	}
-	printf_flag++;
+//	uint16_t static printf_flag=0;
+//	if(printf_flag==8){
+//	printf("x=%.4f y=%.4f theta=%.4f\n",x,y, theta);
+//	printf_flag=0;
+//	}
+//	printf_flag++;
 }
 
 

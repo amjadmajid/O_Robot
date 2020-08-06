@@ -26,13 +26,13 @@ void tachometer_init(void(*userTaskLeft)(void), void(*userTaskRight)(void) ){
 	P10->DIR &= ~BIT5;               // make P10.5 in
 
 	// configure pin 6.1 as input and enable interrupt
-	P6->SEL0 &= ~(BIT1);
-	P6->SEL1 &= ~(BIT1);
-	P6->DIR &= ~(BIT1);
+	P6->SEL0 &= ~BIT1;
+	P6->SEL1 &= ~BIT1;
+	P6->DIR &= ~BIT1;
 
-	P6->IFG &= ~(BIT1); // ensure that the interrupt flag is initially clear
-	P6->IES &= ~(BIT1);  // rising edge
-	P6->IE |= (BIT1);  // arm (enable) interrupt on P6.1 and P6.6
+	P6->IFG &= ~BIT1; // ensure that the interrupt flag is initially clear
+	P6->IES &= ~BIT1;  // rising edge
+	P6->IE |= BIT1;  // arm (enable) interrupt on P6.1 and P6.6
 
 	NVIC->IP[10] &= (NVIC->IP[10] &0xFFFFFF00 )|0x00000020;
 	NVIC->ISER[1] =  1 << (PORT6_IRQn & 31); /* enable interrupt 40 in NVICC
@@ -58,7 +58,7 @@ void PORT6_IRQHandler(void){
 	if(P6->IFG & BIT1){
 	    P6->IFG &= ~BIT1;
 		// execute user hook
-		(*taskLeft)();
+		(*taskRight)();
 	}
 }
 
@@ -67,7 +67,7 @@ void PORT5_IRQHandler(void){
     if(P5->IFG & BIT0){
         P5->IFG &= ~BIT0;
         // execute user hook
-        (*taskRight)();
+        (*taskLeft)();
     }
 }
 

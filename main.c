@@ -14,9 +14,11 @@
 
 #define MAX_IR 800 // max ir distances in mm
 #define DUTY_CYCLE 3750
-#define X_GOAL 4
-#define Y_GOAL 0
+#define X_GOAL 1
+#define Y_GOAL -1
 #define CONTROL_PERIOD 5000
+#define RIGHT_TACHO_DIR (P9->IN & BIT2)
+#define LEFT_TACHO_DIR (P10->IN & BIT5)
 
 // initialize the robot data structure
 tachometer_t right_tachometer = {0,0,0};
@@ -29,16 +31,23 @@ wheel_t left_wheel;
 differential_robot_t robot;
 
 void leftTachometer(void){
-  uint32_t tks = left_tachometer.ticks;
-  tks++;
+  int32_t tks = left_tachometer.ticks;
+  if (LEFT_TACHO_DIR){
+      tks++;
+  }else{
+      tks--;
+  }
   left_tachometer.ticks = tks;
 }
 
 void rightTachometer(void){
-  uint32_t tks = right_tachometer.ticks;
-  tks++;
-
-  right_tachometer.ticks = tks;
+    int32_t tks = right_tachometer.ticks;
+    if (RIGHT_TACHO_DIR){
+        tks++;
+    }else{
+        tks--;
+    }
+    right_tachometer.ticks = tks;
 }
 
 uint8_t read_buttons(){
@@ -80,11 +89,10 @@ void main(void)
 
     robot_init();
     clock_init_48MHz();
-
     press_buttons_to_go();
 
     motor_init();
-    motor_forward(DUTY_CYCLE, DUTY_CYCLE);
+    // motor_forward(DUTY_CYCLE, DUTY_CYCLE);
     tachometer_init(&leftTachometer, &rightTachometer);
 //    go_to_goal_init(X_GOAL - (.1 * X_GOAL),Y_GOAL + (.1 * Y_GOAL), &robot,CONTROL_PERIOD);
     go_to_goal_init(X_GOAL ,Y_GOAL , &robot,CONTROL_PERIOD);

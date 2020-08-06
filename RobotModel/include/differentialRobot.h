@@ -26,8 +26,8 @@ typedef struct ir_distances{
 
 typedef struct tachometer{
     volatile float delta_dis;     // distance crossed between to updates in meter
-    volatile uint32_t ticks;
-    volatile uint32_t prev_ticks;
+    volatile int32_t ticks;
+    volatile int32_t prev_ticks;
 } tachometer_t;
 
 typedef struct pose

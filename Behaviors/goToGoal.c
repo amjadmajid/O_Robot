@@ -16,7 +16,8 @@
 #include "ir_distance.h"
 #include "lpf.h"
 
-
+// the linear velocity amplified by 100 to integer math purpose 
+#define LINEAR_VELOCITY 35000
 
 uint32_t time;
 int32_t left_duty_cycle;
@@ -27,13 +28,12 @@ void duty_check(){
     if (right_duty_cycle < -11000) right_duty_cycle = -11000;
     if (left_duty_cycle > 11000) left_duty_cycle = 11000;
     if (left_duty_cycle < -11000) left_duty_cycle = -11000;
-
 }
 
 
 double E_i=0;
-float K_i = 1.6;
-float K_p = 50;
+float K_i = .013;
+float K_p = 320;
 
 float _x_goal;
 float _y_goal;
@@ -47,8 +47,13 @@ uint32_t ir_left[500]={0};
 //float meter_per_rev =  0.07; // RADIUS * 2
 
 float theta_goal;
+uint32_t linear_velocity = LINEAR_VELOCITY;
 
 void go_to_goal_controller(){
+
+    float delta_x = _x_goal - _robot->pose->x;
+    float delta_y = _y_goal - _robot->pose->y;
+    theta_goal = (float) atan2(delta_y, delta_x);
 
     float heading_error = theta_goal - _robot->pose->theta;
     float err = (float) atan2(sin(heading_error), cos(heading_error));
@@ -61,18 +66,25 @@ void go_to_goal_controller(){
 //    left_duty_cycle = (linear_velocity - w * L )/(meter_per_rev);
 //    right_duty_cycle = (linear_velocity + w * L )/(meter_per_rev);
 
-    left_duty_cycle = (50000 - w * 14)/7 ;
-    right_duty_cycle = (50000 + w * 14)/7 ;
+    // increase linear velocity from gradually from 15000 to 35000
+    // if the controller is fired every 10 ms then the robot reaches 3000 after 4 second
+//    if (time < 400)
+//    {
+//        linear_velocity +=50;
+//    }
+
+    left_duty_cycle = (linear_velocity - w * 14)/7 ;
+    right_duty_cycle = (linear_velocity + w * 14)/7 ;
 
 
-    uint32_t static printf_flag=10;
-    if(printf_flag==10){
+//    uint32_t static printf_flag=10;
+//    if(printf_flag==10){
 //    printf("tg=%.4f e=%.4f w=%.4f ldc=%d rdc=%d\n",theta_goal, err, w, left_duty_cycle,right_duty_cycle);
 //    printf("tg=%.4f tr=%.4f \n",err,_robot->pose->theta);
 //      printf("e=%.4f te=%.4f\n", err, heading_error);
-    printf_flag=0;
-    }
-    printf_flag++;
+//    printf_flag=0;
+//    }
+//    printf_flag++;
 
     duty_check();
 
@@ -136,13 +148,10 @@ void go_to_goal_controller(){
 }
 
 void go_to_goal_init(float x_g, float y_g, differential_robot_t * robot_pt, uint32_t p){
-    _x_goal = x_g;
+    _x_goal = (x_g * 10)/16 ;  // todo make it discrete math
     _y_goal = y_g;
     _robot = robot_pt;
 
-    int32_t delta_x = _x_goal - _robot->pose->x;
-    int32_t delta_y = _y_goal - _robot->pose->y;
-    theta_goal = (float) atan2(delta_y, delta_x);
 
     timerA1_init(&go_to_goal_controller, p);
 
