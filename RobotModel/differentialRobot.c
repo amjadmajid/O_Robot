@@ -44,12 +44,12 @@ void robot_position_update(differential_robot_t * robot){
     float d_l = robot->left->tachometer->delta_dis;
 	float d_c = _robot_distance_update_mm(d_r, d_l);
 
-//    uint16_t static printf_flag=0;
-//    if(printf_flag==4){
-//    printf("d_r=%.4f d_l=%.4f d_c=%.4f\n",d_r, d_l, d_c);
-//    printf_flag=0;
-//    }
-//    printf_flag++;
+    uint16_t static printf_flag=0;
+    if(printf_flag==4){
+    printf("l=%d r=%d \n",robot->left->tachometer->ticks, robot->right->tachometer->ticks);
+    printf_flag=0;
+    }
+    printf_flag++;
 
 	float x = robot->pose->x;
 	float y = robot->pose->y;
@@ -58,7 +58,7 @@ void robot_position_update(differential_robot_t * robot){
 	x += d_c * cos(theta);
 	y += d_c * sin(theta);
 	float delta_theta = (float)(d_r - d_l)/robot->base_len;
-	theta += atan2( sin(delta_theta), cos(delta_theta) );
+	theta += delta_theta;
 
 	robot->pose->x = x;
 	robot->pose->y = y;

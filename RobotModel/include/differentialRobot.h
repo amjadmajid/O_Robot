@@ -10,7 +10,7 @@
 #define DATASTRUCTURE_INCLUDE_ROBOT_H_
 
 #define RADIUS .035               // wheel radius in meter
-#define TICKS_PER_REV 360                // ticks per wheel revolution
+#define TICKS_PER_REV 36                // ticks per wheel revolution
 #define _PI 314              // when PI is used divide by hundred (fixed point arethmatic)
 #define L .14                // distance between the two wheels in meter
 // #define dis_per_tick  .61 //(2 * _PI * R)/N [distance in meter]

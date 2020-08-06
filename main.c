@@ -15,7 +15,7 @@
 #define MAX_IR 800 // max ir distances in mm
 #define DUTY_CYCLE 3750
 #define X_GOAL 1
-#define Y_GOAL -1
+#define Y_GOAL 0
 #define CONTROL_PERIOD 5000
 #define RIGHT_TACHO_DIR (P9->IN & BIT2)
 #define LEFT_TACHO_DIR (P10->IN & BIT5)
@@ -32,27 +32,27 @@ differential_robot_t robot;
 
 void leftTachometer(void){
   int32_t tks = left_tachometer.ticks;
-  if (LEFT_TACHO_DIR){
+//  if (LEFT_TACHO_DIR){
       tks++;
-  }else{
-      tks--;
-  }
+//  }else{
+//      tks--;
+//  }
   left_tachometer.ticks = tks;
 }
 
 void rightTachometer(void){
     int32_t tks = right_tachometer.ticks;
-    if (RIGHT_TACHO_DIR){
+//    if (RIGHT_TACHO_DIR){
         tks++;
-    }else{
-        tks--;
-    }
+//    }else{
+//        tks--;
+//    }
     right_tachometer.ticks = tks;
 }
 
 uint8_t read_buttons(){
     // P1->IN works in a negative logic fashion
-    return (~(P1->IN) & (BIT1+BIT4));
+    return (~(P1->IN) & BIT1 && ~(P1->IN) & BIT4 );
 }
 
 void press_buttons_to_go(void){

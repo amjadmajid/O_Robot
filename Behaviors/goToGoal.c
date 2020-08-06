@@ -17,7 +17,7 @@
 #include "lpf.h"
 
 // the linear velocity amplified by 100 to integer math purpose 
-#define LINEAR_VELOCITY 35000
+#define LINEAR_VELOCITY 30000
 
 uint32_t time;
 int32_t left_duty_cycle;
@@ -32,7 +32,7 @@ void duty_check(){
 
 
 double E_i=0;
-float K_i = .013;
+float K_i = 0;
 float K_p = 320;
 
 float _x_goal;
@@ -148,7 +148,7 @@ void go_to_goal_controller(){
 }
 
 void go_to_goal_init(float x_g, float y_g, differential_robot_t * robot_pt, uint32_t p){
-    _x_goal = (x_g * 10)/16 ;  // todo make it discrete math
+    _x_goal =  x_g ;// (x_g * 10)/16 ;  // todo make it discrete math
     _y_goal = y_g;
     _robot = robot_pt;
 
