@@ -51,7 +51,7 @@ uint32_t linear_velocity = LINEAR_VELOCITY;
 
 void go_to_goal_controller(){
 
-    if ( _robot->left->tachometer->ticks > 150 || _robot->right->tachometer->ticks > 150 )
+    if ( _robot->left->tachometer->ticks > 6500 || _robot->right->tachometer->ticks > 6500 )
     {
         time=150000;
     }

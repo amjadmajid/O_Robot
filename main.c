@@ -14,7 +14,7 @@
 
 #define MAX_IR 800 // max ir distances in mm
 #define DUTY_CYCLE 3750
-#define X_GOAL 10
+#define X_GOAL 400
 #define Y_GOAL 0
 #define CONTROL_PERIOD 5000
 #define RIGHT_TACHO_DIR (P9->IN & BIT2)

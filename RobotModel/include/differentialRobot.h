@@ -10,12 +10,12 @@
 #define DATASTRUCTURE_INCLUDE_ROBOT_H_
 
 #define RADIUS .035               // wheel radius in meter
-#define TICKS_PER_REV 45                // ticks per wheel revolution
-#define _PI 314              // when PI is used divide by hundred (fixed point arithmetic)
+#define TICKS_PER_REV 360                // ticks per wheel revolution
+#define _PI 314              // when PI is used divide by hundred (fixed point arethmatic)
 #define L .14                // distance between the two wheels in meter
-// #define dis_per_tick  .0049 //(2 * _PI * R)/N [distance in meter]
-#define TICK_DIS_NUMERATOR 49       // to avoid float operation split the fraction 0.61
-#define TICK_DIS_DENOMINATOR 10000    // consequently you much multiply and then divide
+// #define dis_per_tick  .61 //(2 * _PI * R)/N [distance in meter]
+#define TICK_DIS_NUMERATOR 61       // to avoid float operation split the fraction 0.61
+#define TICK_DIS_DENOMINATOR 100000    // consequently you much multiply and then divide
 
 typedef struct ir_distances{
     uint32_t ir_left;
