@@ -7,11 +7,38 @@
 #include "differentialRobot.h"
 #include <stdio.h>
 #include <math.h>
+#define MAX_IR 800 // max ir distances in mm
+
+// initialize the robot data structure
+tachometer_t right_tachometer = {0,0,0};
+tachometer_t left_tachometer = {0,0,0};
+pose_t pose = {0,0,0};  // initial position of the robot
+ir_distance_t ir_distance = {MAX_IR,MAX_IR,MAX_IR};
+
+wheel_t right_wheel;
+wheel_t left_wheel;
+differential_robot_t robot;
+
+differential_robot_t* robot_init()
+{
+    right_wheel.radius = RADIUS;
+    right_wheel.ticks_per_rev = 0;
+    right_wheel.tachometer = &right_tachometer;
+    left_wheel.radius = RADIUS;
+    left_wheel.ticks_per_rev = 0;
+    left_wheel.tachometer = &left_tachometer;
+    robot.base_len = L;
+    robot.right = &right_wheel;
+    robot.left = &left_wheel;
+    robot.pose = &pose;
+    robot.ir_distance = &ir_distance;
+    return &robot;
+}
+
 
 float _robot_distance_update_mm(float d_r, float d_l){
 	return (d_r + d_l)/2;
 }
-
 
 void _wheel_distance_update_mm( tachometer_t * tachometer){
 	// calculate the distance traveled since the last update
@@ -19,22 +46,7 @@ void _wheel_distance_update_mm( tachometer_t * tachometer){
 	float delta_ticks = ticks - tachometer->prev_ticks;
 	// update the previous tachometer ticks
 	tachometer->prev_ticks = ticks;
-
-//	uint16_t static printf_flag=10;
-//    printf_flag--;
-//    if(printf_flag==0){
-//	printf("%d\n",delta_ticks);
-//    printf_flag=10;
-//    }
-
 	tachometer->delta_dis = (TICK_DIS_NUMERATOR * delta_ticks) / TICK_DIS_DENOMINATOR;  //distance in meter
-
-	  // uint16_t static printf_flag=10;
-	  //   printf_flag--;
-	  //   if(printf_flag==0){
-	  //       printf("%.d\n",tachometer->delta_dis);
-	  //       printf_flag=10;
-	  //   }
 }
 
 void robot_position_update(differential_robot_t * robot){
@@ -43,13 +55,6 @@ void robot_position_update(differential_robot_t * robot){
     float d_r = robot->right->tachometer->delta_dis;
     float d_l = robot->left->tachometer->delta_dis;
 	float d_c = _robot_distance_update_mm(d_r, d_l);
-
-//    uint16_t static printf_flag=0;
-//    if(printf_flag==4){
-//    printf("l=%d r=%d \n",robot->left->tachometer->ticks, robot->right->tachometer->ticks);
-//    printf_flag=0;
-//    }
-//    printf_flag++;
 
 	float x = robot->pose->x;
 	float y = robot->pose->y;
@@ -63,13 +68,6 @@ void robot_position_update(differential_robot_t * robot){
 	robot->pose->x = x;
 	robot->pose->y = y;
 	robot->pose->theta = atan2( sin(theta), cos(theta));
-
-//	uint16_t static printf_flag=0;
-//	if(printf_flag==8){
-//	printf("x=%.4f y=%.4f theta=%.4f\n",x,y, theta);
-//	printf_flag=0;
-//	}
-//	printf_flag++;
 }
 
 

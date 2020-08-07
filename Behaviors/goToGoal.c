@@ -4,7 +4,6 @@
  * Email : amjad.y.majid@gmail.com
  */
 
-
 #include <stdint.h>
 #include <stdio.h>
 #include <math.h>
@@ -16,9 +15,12 @@
 #include "motor.h"
 #include "ir_distance.h"
 #include "lpf.h"
+#include "motor.h"
+#include "pwm.h"
 
-// the linear velocity amplified by 100 to integer math purpose 
+// the linear velocity amplified by 100 for integer math purpose 
 #define LINEAR_VELOCITY 30000
+#define DUTY_CYCLE 3750
 
 uint32_t time;
 int32_t left_duty_cycle;
@@ -28,8 +30,8 @@ float _y_goal;
 differential_robot_t * _robot;
 
 double E_i=0;
-float K_i = 8.4;
-float K_p = 820;
+float K_i = 0.6;
+float K_p = 860;
 
 uint32_t ir_left[500]={0};
 float theta_goal;
@@ -46,7 +48,7 @@ void leftTachometer(void){
 }
 
 void rightTachometer(void){
-    int32_t tks = _robot->right->tachometer->.ticks;
+    int32_t tks = _robot->right->tachometer->ticks;
     if(right_duty_cycle >= 0){
         tks++;
     }else{
@@ -65,10 +67,10 @@ void duty_check(){
 
 void go_to_goal_controller(){
 
-    if ( _robot->left->tachometer->ticks > 6500 || _robot->right->tachometer->ticks > 6500 )
-    {
-        time=150000;
-    }
+//    if ( _robot->left->tachometer->ticks > 6500 || _robot->right->tachometer->ticks > 6500 )
+//    {
+//        time=150000;
+//    }
 
     float delta_x = _x_goal - _robot->pose->x;
     float delta_y = _y_goal - _robot->pose->y;
@@ -82,70 +84,44 @@ void go_to_goal_controller(){
     float U_p =  (K_p * err);
     float w = U_p + U_i;
 
-//    left_duty_cycle = (linear_velocity - w * L )/(meter_per_rev);
-//    right_duty_cycle = (linear_velocity + w * L )/(meter_per_rev);
-
-    // increase linear velocity from gradually from 15000 to 35000
-    // if the controller is fired every 10 ms then the robot reaches 3000 after 4 second
 //    if (time < 400)
 //    {
 //        linear_velocity +=50;
 //    }
 
+    // left_duty_cycle = (linear_velocity - w * L )/(meter_per_rev);
+    // right_duty_cycle = (linear_velocity + w * L )/(meter_per_rev);
+
+
     left_duty_cycle = (linear_velocity - w * 14)/7 ;
     right_duty_cycle = (linear_velocity + w * 14)/7 ;
-
-
-//    uint32_t static printf_flag=10;
-//    if(printf_flag==10){
-//    printf("tg=%.4f e=%.4f w=%.4f ldc=%d rdc=%d\n",theta_goal, err, w, left_duty_cycle,right_duty_cycle);
-//    printf("tg=%.4f tr=%.4f \n",err,_robot->pose->theta);
-//      printf("e=%.4f te=%.4f\n", err, heading_error);
-//    printf_flag=0;
-//    }
-//    printf_flag++;
 
     duty_check();
 
     motor_forward(right_duty_cycle, left_duty_cycle);
     robot_position_update(_robot);
 
-//    uint32_t static printf_flag=10;
-//    printf_flag--;
-//    if(printf_flag==0){
-//    printf("x=%.4f y=%.4f theta=%.4f\n",_robot.pose->x,_robot.pose->y,_robot.pose->theta );
-//    printf_flag=10;
-//    }
-
-
     float x_err = (float) fabs((_robot->pose->x - _x_goal));
     float y_err = (float) fabs((_robot->pose->y - _y_goal));
 
-//        uint32_t static printf_flag=4;
-//        printf_flag--;
-//        if(printf_flag==10){
-//        printf("x=%.4f y=%.4f\n", x_err,y_err);
-//        printf_flag=0;
-//        }
-
-//    float static back_flag = 0;
+    float static back_flag = 0;
     if ( x_err < .05 && y_err <.05 ){
 
-//        _x_goal = 1;
-//        _y_goal = -1;
+        _x_goal = 1.6;
+        _y_goal = -1.6;
 
-//        if(back_flag==1){
-//            _x_goal = -.5;
-//            _y_goal = -.5;
-//        }
+        if(back_flag==1){
+            _x_goal = 0;
+            _y_goal = -1.6;
+        }
 
-//        if (back_flag==1){
+        if (back_flag==2){
             motor_stop();
             timerA1_stop();
             printf("Arrived");
             __no_operation();
-//        }
-//        back_flag++;
+        }
+        back_flag++;
     }
 
     if(time == 150000 ){
@@ -171,8 +147,11 @@ void go_to_goal_init(float x_g, float y_g, differential_robot_t * robot_pt, uint
     _y_goal = y_g;
     _robot = robot_pt;
 
+    motor_init();
     tachometer_init(&leftTachometer, &rightTachometer);
+    pwm_init(15000, 0);
     timerA1_init(&go_to_goal_controller, p);
+
 
     // initialize the ADC for the IR distance sensor
 //    uint32_t *init_left=NULL;

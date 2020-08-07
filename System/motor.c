@@ -63,15 +63,6 @@ void motor_backward(uint32_t leftDutyCycle, uint32_t rightDutyCycle){
   POWER     |=(BIT6|BIT7);
 }
 
-
-//void motor_forward(uint32_t leftDutyCycle, uint32_t rightDutyCycle){
-//  set_left_duty_cycle(leftDutyCycle);
-//  set_right_duty_cycle(rightDutyCycle);
-//  DIRECTION &= ~(BIT6|BIT7);   // reverse movement direction to go forward
-//  SLEEP     |=(BIT6|BIT7);
-//  POWER     |=(BIT6|BIT7);
-//}
-
 void motor_forward(int32_t leftDuty, int32_t rightDuty){
 
     if(leftDuty < 0 && rightDuty < 0){
