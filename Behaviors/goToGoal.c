@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "tachometer.h"
 #include "differentialRobot.h"
 #include "msp.h"
 #include "timer_A1.h"
@@ -22,6 +23,38 @@
 uint32_t time;
 int32_t left_duty_cycle;
 int32_t right_duty_cycle;
+float _x_goal;
+float _y_goal;
+differential_robot_t * _robot;
+
+double E_i=0;
+float K_i = 8.4;
+float K_p = 820;
+
+uint32_t ir_left[500]={0};
+float theta_goal;
+uint32_t linear_velocity = LINEAR_VELOCITY;
+
+void leftTachometer(void){
+  int32_t tks = _robot->left->tachometer->ticks;
+  if(left_duty_cycle >= 0){
+      tks++;
+  }else{
+    tks--;
+  }
+  _robot->left->tachometer->ticks = tks;
+}
+
+void rightTachometer(void){
+    int32_t tks = _robot->right->tachometer->.ticks;
+    if(right_duty_cycle >= 0){
+        tks++;
+    }else{
+        tks--;
+    }
+    _robot->right->tachometer->ticks = tks;
+}
+
 void duty_check(){
     // control the max and the min of the duty cycle
     if (right_duty_cycle > 11000) right_duty_cycle = 11000;
@@ -29,25 +62,6 @@ void duty_check(){
     if (left_duty_cycle > 11000) left_duty_cycle = 11000;
     if (left_duty_cycle < -11000) left_duty_cycle = -11000;
 }
-
-
-double E_i=0;
-float K_i = 8.4;
-float K_p = 820;
-
-float _x_goal;
-float _y_goal;
-differential_robot_t * _robot;
-
-uint32_t ir_left[500]={0};
-
-//    int32_t v = sqrt((x_goal * x_goal)+(y_goal * y_goal ))  ; // reach the goal in 10 s
-//    int32_t v = 150;
-//int32_t linear_velocity = 30;// v * 2
-//float meter_per_rev =  0.07; // RADIUS * 2
-
-float theta_goal;
-uint32_t linear_velocity = LINEAR_VELOCITY;
 
 void go_to_goal_controller(){
 
@@ -157,7 +171,7 @@ void go_to_goal_init(float x_g, float y_g, differential_robot_t * robot_pt, uint
     _y_goal = y_g;
     _robot = robot_pt;
 
-
+    tachometer_init(&leftTachometer, &rightTachometer);
     timerA1_init(&go_to_goal_controller, p);
 
     // initialize the ADC for the IR distance sensor
