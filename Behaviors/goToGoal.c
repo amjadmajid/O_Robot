@@ -32,8 +32,8 @@ void duty_check(){
 
 
 double E_i=0;
-float K_i = 0;
-float K_p = 320;
+float K_i = 8.4;
+float K_p = 820;
 
 float _x_goal;
 float _y_goal;
@@ -50,6 +50,11 @@ float theta_goal;
 uint32_t linear_velocity = LINEAR_VELOCITY;
 
 void go_to_goal_controller(){
+
+    if ( _robot->left->tachometer->ticks > 150 || _robot->right->tachometer->ticks > 150 )
+    {
+        time=150000;
+    }
 
     float delta_x = _x_goal - _robot->pose->x;
     float delta_y = _y_goal - _robot->pose->y;

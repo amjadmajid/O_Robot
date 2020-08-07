@@ -14,7 +14,7 @@ float _robot_distance_update_mm(float d_r, float d_l){
 
 
 void _wheel_distance_update_mm( tachometer_t * tachometer){
-	// calculate the distance travelled since the last update in millimeter 
+	// calculate the distance traveled since the last update
     int32_t ticks = tachometer->ticks;
 	float delta_ticks = ticks - tachometer->prev_ticks;
 	// update the previous tachometer ticks
