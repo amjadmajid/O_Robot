@@ -21,17 +21,21 @@ differential_robot_t robot;
 
 differential_robot_t* robot_init()
 {
+	// initialize right wheel
     right_wheel.radius = RADIUS;
     right_wheel.ticks_per_rev = 0;
     right_wheel.tachometer = &right_tachometer;
+    // initialize left wheel
     left_wheel.radius = RADIUS;
     left_wheel.ticks_per_rev = 0;
     left_wheel.tachometer = &left_tachometer;
+
     robot.base_len = L;
     robot.right = &right_wheel;
     robot.left = &left_wheel;
     robot.pose = &pose;
     robot.ir_distance = &ir_distance;
+   
     return &robot;
 }
 

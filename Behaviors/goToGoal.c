@@ -33,7 +33,7 @@ double E_i=0;
 float K_i = 0.6;
 float K_p = 860;
 
-uint32_t ir_left[500]={0};
+uint32_t ir_left[400]={0};
 float theta_goal;
 uint32_t linear_velocity = LINEAR_VELOCITY;
 
@@ -118,7 +118,6 @@ void go_to_goal_controller(){
         if (back_flag==2){
             motor_stop();
             timerA1_stop();
-            printf("Arrived");
             __no_operation();
         }
         back_flag++;
@@ -127,18 +126,21 @@ void go_to_goal_controller(){
     if(time == 150000 ){
         motor_stop();
         timerA1_stop();
-        printf("Not arrived");
         __no_operation();
     }
     time++;
 
-    // updating the IR distance measurements
-//    ir_distances(&(_robot->ir_distance->ir_left),&(_robot->ir_distance->ir_center),&(_robot->ir_distance->ir_right) );
+//    updating the IR distance measurements
+   ir_distances(&(_robot->ir_distance->ir_left),&(_robot->ir_distance->ir_center),&(_robot->ir_distance->ir_right) );
 
-    // Debugging
-//    if (time < 1500 && time > 1000  ){
-//        ir_left[time-1000] = _robot->ir_distance->ir_left;
-//    }
+//    Debugging
+   if (time < 500 && time >= 100  ){
+       ir_left[time-100] = _robot->ir_distance->ir_left;
+   }
+   if (time ==500)
+   {
+       __no_operation();
+   }
 
 }
 
@@ -153,18 +155,18 @@ void go_to_goal_init(float x_g, float y_g, differential_robot_t * robot_pt, uint
     timerA1_init(&go_to_goal_controller, p);
 
 
-    // initialize the ADC for the IR distance sensor
-//    uint32_t *init_left=NULL;
-//    uint32_t * init_center=NULL;
-//    uint32_t * init_right=NULL;
+    //initialize the ADC for the IR distance sensor
+    uint32_t *init_left=NULL;
+    uint32_t * init_center=NULL;
+    uint32_t * init_right=NULL;
 
-//    adc_init_channel_17_12_16();
-//    read_adc_17_12_16(init_left,init_center,init_right);
+    adc_init_channel_17_12_16();
+    read_adc_17_12_16(init_left,init_center,init_right);
 
-    // initialize the Low Pass Filters for the ir distance sensors
-//    LPF_Init(*init_left,32);     // P9.0/channel 17
-//    LPF_Init2(*init_center,32);    // P4.1/channel 12
-//    LPF_Init3(*init_right,32);    // P9.1/channel 16
+    //initialize the Low Pass Filters for the ir distance sensors
+    LPF_Init(*init_left,32);     // P9.0/channel 17
+    LPF_Init2(*init_center,32);    // P4.1/channel 12
+    LPF_Init3(*init_right,32);    // P9.1/channel 16
 
     time=0;
 }

@@ -9,7 +9,7 @@
 #include "interruptHandler.h"
 
 #define CONTROL_PERIOD 5000
-#define X_GOAL 1.6
+#define X_GOAL 0
 #define Y_GOAL 0
 
 
@@ -39,9 +39,8 @@ void main(void)
     differential_robot_t* robot = robot_init();
     clock_init_48MHz();
     press_buttons_to_go();
-    go_to_goal_init(X_GOAL ,Y_GOAL , robot,CONTROL_PERIOD);
-
     enableInterrupts();
+    go_to_goal_init(X_GOAL ,Y_GOAL , robot,CONTROL_PERIOD);
 
     while(1){
       waitForInterrupt();

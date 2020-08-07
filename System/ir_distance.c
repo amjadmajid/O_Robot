@@ -52,7 +52,7 @@ void adc_init_channel_17_12_16(void){
   P9->SEL1 |= BIT1;
   P9->SEL0 |= BIT1;
 
-  ADC14->CTL0 |= ADC14_CTL0_ENC;         // 9) enable
+  ADC14->CTL0 |= ADC14_CTL0_ENC;         // enable
 }
 
 volatile uint32_t  debug_reg = 0;
@@ -68,11 +68,11 @@ void read_adc_17_12_16(uint32_t *ch17, uint32_t *ch12, uint32_t *ch16){
       *ch17 = ADC14->MEM[2];
 }
 
-uint32_t *raw_left=NULL;
+uint32_t * raw_left  =NULL;
 uint32_t * raw_center=NULL;
-uint32_t * raw_right=NULL;
-void ir_distances(uint32_t *left, uint32_t * center, uint32_t * right){
+uint32_t * raw_right =NULL;
 
+void ir_distances(uint32_t *left, uint32_t * center, uint32_t * right){
 
     read_adc_17_12_16(raw_left,raw_center,raw_right);
     *left = left_convert(LPF_Calc(*raw_left));          // center is channel 12, P4.1
