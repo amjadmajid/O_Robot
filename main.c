@@ -8,7 +8,6 @@
 #include "clock.h"
 #include "pwm.h"
 #include "motor.h"
-#include "tachometer.h"
 #include "timer_A1.h"
 #include "interruptHandler.h"
 
@@ -29,26 +28,6 @@ ir_distance_t ir_distance = {MAX_IR,MAX_IR,MAX_IR};
 wheel_t right_wheel;
 wheel_t left_wheel;
 differential_robot_t robot;
-
-void leftTachometer(void){
-  int32_t tks = left_tachometer.ticks;
-//  if (LEFT_TACHO_DIR){
-      tks++;
-//  }else{
-//      tks--;
-//  }
-  left_tachometer.ticks = tks;
-}
-
-void rightTachometer(void){
-    int32_t tks = right_tachometer.ticks;
-//    if (RIGHT_TACHO_DIR){
-        tks++;
-//    }else{
-//        tks--;
-//    }
-    right_tachometer.ticks = tks;
-}
 
 uint8_t read_buttons(){
     // P1->IN works in a negative logic fashion
@@ -93,7 +72,7 @@ void main(void)
 
     motor_init();
     // motor_forward(DUTY_CYCLE, DUTY_CYCLE);
-    tachometer_init(&leftTachometer, &rightTachometer);
+  
 //    go_to_goal_init(X_GOAL - (.1 * X_GOAL),Y_GOAL + (.1 * Y_GOAL), &robot,CONTROL_PERIOD);
     go_to_goal_init(X_GOAL ,Y_GOAL , &robot,CONTROL_PERIOD);
 
