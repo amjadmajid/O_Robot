@@ -9,7 +9,7 @@
 #include "interruptHandler.h"
 
 #define CONTROL_PERIOD 5000
-#define X_GOAL 0
+#define X_GOAL 1.6
 #define Y_GOAL 0
 
 

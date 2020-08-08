@@ -19,7 +19,7 @@
 #include "pwm.h"
 
 // the linear velocity amplified by 100 for integer math purpose 
-#define LINEAR_VELOCITY 30000
+#define LINEAR_VELOCITY 40000
 #define DUTY_CYCLE 3750
 
 uint32_t time;
