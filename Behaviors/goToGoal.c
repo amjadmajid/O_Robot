@@ -98,7 +98,7 @@ void go_to_goal_controller(){
 
     duty_check();
 
-    motor_forward(right_duty_cycle, left_duty_cycle);
+//    motor_forward(right_duty_cycle, left_duty_cycle);
     robot_position_update(_robot);
 
     float x_err = (float) fabs((_robot->pose->x - _x_goal));
@@ -134,13 +134,13 @@ void go_to_goal_controller(){
    ir_distances(&(_robot->ir_distance->ir_left),&(_robot->ir_distance->ir_center),&(_robot->ir_distance->ir_right) );
 
 //    Debugging
-   if (time < 500 && time >= 100  ){
-       ir_left[time-100] = _robot->ir_distance->ir_left;
-   }
-   if (time ==500)
-   {
-       __no_operation();
-   }
+//   if (time < 500 && time >= 100  ){
+//       ir_left[time-100] = _robot->ir_distance->ir_left;
+//   }
+//   if (time ==500)
+//   {
+//       __no_operation();
+//   }
 
 }
 
