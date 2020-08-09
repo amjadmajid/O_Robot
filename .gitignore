@@ -10,3 +10,4 @@ RemoteSystemsTempFiles/*
 
 
 /Debug/
+*.DS_Store
