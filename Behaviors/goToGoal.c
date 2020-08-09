@@ -17,6 +17,7 @@
 #include "lpf.h"
 #include "motor.h"
 #include "pwm.h"
+#include "UART0.h"
 
 // the linear velocity amplified by 100 for integer math purpose 
 #define LINEAR_VELOCITY 40000
@@ -98,7 +99,7 @@ void go_to_goal_controller(){
 
     duty_check();
 
-//    motor_forward(right_duty_cycle, left_duty_cycle);
+    motor_forward(right_duty_cycle, left_duty_cycle);
     robot_position_update(_robot);
 
     float x_err = (float) fabs((_robot->pose->x - _x_goal));
@@ -142,6 +143,8 @@ void go_to_goal_controller(){
 //       __no_operation();
 //   }
 
+   UART0_OutUDec5(_robot->ir_distance->ir_left); UART0_OutUDec5(_robot->ir_distance->ir_center); UART0_OutUDec5(_robot->ir_distance->ir_right);
+   UART0_InChar('\n') UART0_InChar('\r');
 }
 
 void go_to_goal_init(float x_g, float y_g, differential_robot_t * robot_pt, uint32_t p){
@@ -154,19 +157,19 @@ void go_to_goal_init(float x_g, float y_g, differential_robot_t * robot_pt, uint
     pwm_init(15000, 0);
     timerA1_init(&go_to_goal_controller, p);
 
+    UART0_Init();
+    adc_init_channel_17_12_16();
 
     //initialize the ADC for the IR distance sensor
-    uint32_t *init_left=NULL;
-    uint32_t * init_center=NULL;
-    uint32_t * init_right=NULL;
-
-    adc_init_channel_17_12_16();
-    read_adc_17_12_16(init_left,init_center,init_right);
+//    uint32_t *init_left=NULL;
+//    uint32_t * init_center=NULL;
+//    uint32_t * init_right=NULL;
+//    read_adc_17_12_16(init_left,init_center,init_right);
 
     //initialize the Low Pass Filters for the ir distance sensors
-    LPF_Init(*init_left,32);     // P9.0/channel 17
-    LPF_Init2(*init_center,32);    // P4.1/channel 12
-    LPF_Init3(*init_right,32);    // P9.1/channel 16
+//    LPF_Init(*init_left,32);     // P9.0/channel 17
+//    LPF_Init2(*init_center,32);    // P4.1/channel 12
+//    LPF_Init3(*init_right,32);    // P9.1/channel 16
 
     time=0;
 }
