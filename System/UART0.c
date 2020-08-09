@@ -2,18 +2,22 @@
 // Runs on MSP432
 // Busy-wait device driver for the UART UCA0.
 // Daniel Valvano
-// July 11, 2019
+// September 23, 2017
 // Modified by EE345L students Charlie Gough && Matt Hawk
 // Modified by EE345M students Agustinus Darmawan && Mingjie Qiu
 
-/* This example accompanies the book
-   "Embedded Systems: Introduction to Robotics,
-   Jonathan W. Valvano, ISBN: 9781074544300, copyright (c) 2019
+/* This example accompanies the books
+   "Embedded Systems: Introduction to the MSP432 Microcontroller",
+       ISBN: 978-1512185676, Jonathan Valvano, copyright (c) 2017
+   "Embedded Systems: Real-Time Interfacing to the MSP432 Microcontroller",
+       ISBN: 978-1514676585, Jonathan Valvano, copyright (c) 2017
+   "Embedded Systems: Real-Time Operating Systems for ARM Cortex-M Microcontrollers",
+       ISBN: 978-1466468863, , Jonathan Valvano, copyright (c) 2017
  For more information about my classes, my research, and my books, see
  http://users.ece.utexas.edu/~valvano/
 
 Simplified BSD License (FreeBSD License)
-Copyright (c) 2019, Jonathan Valvano, All rights reserved.
+Copyright (c) 2017, Jonathan Valvano, All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
@@ -93,9 +97,8 @@ char UART0_InChar(void){
 // Input: letter is an 8-bit ASCII character to be transferred
 // Output: none
 void UART0_OutChar(char letter){
-    // you write this as part of Lab 11
-
-
+  while((EUSCI_A0->IFG&0x02) == 0);
+  EUSCI_A0->TXBUF = letter;
 }
 
 //------------UART0_OutString------------
@@ -103,9 +106,10 @@ void UART0_OutChar(char letter){
 // Input: pointer to a NULL-terminated string to be transferred
 // Output: none
 void UART0_OutString(char *pt){
-    // you write this as part of Lab 11
-
-
+  while(*pt){
+    UART0_OutChar(*pt);
+    pt++;
+  }
 }
 
 //------------UART0_InUDec------------
@@ -146,19 +150,13 @@ char character;
 // Output: none
 // Variable format 1-10 digits with no space before or after
 void UART0_OutUDec(uint32_t n){
-    // you write this as part of Lab 11
-
-
-}
-//-----------------------UART0_OutSDec-----------------------
-// Output a 32-bit number in signed decimal format
-// Input: 32-bit number to be transferred
-// Output: none
-// Variable format 1-10 digits with no space before or after
-void UART0_OutSDec(int32_t n){
-    // you write this as part of Lab 11
-
-
+// This function uses recursion to convert decimal number
+//   of unspecified length as an ASCII string
+  if(n >= 10){
+    UART0_OutUDec(n/10);
+    n = n%10;
+  }
+  UART0_OutChar(n+'0'); /* n is between 0 and 9 */
 }
 uint32_t Messageindexb;
 char Messageb[8];

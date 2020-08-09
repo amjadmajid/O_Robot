@@ -75,9 +75,9 @@ void read_adc_17_12_16(){
 void ir_distances(uint32_t *left, uint32_t * center, uint32_t * right){
 
     read_adc_17_12_16();
-    *left = left_convert(adc14_mem_2);          // center is channel 12, P4.1
-    *center = center_convert(adc14_mem_0);   // right is channel 17 P9.0
-    *right = right_convert(adc14_mem_1);      // left is channel 16, P9.1
+    *left = left_convert(adc14_mem_0);         // left is channel 12, P4.1
+    *center = center_convert(adc14_mem_2);     // center is channel 17 P9.0
+    *right = right_convert(adc14_mem_1);       // right is channel 16, P9.1
 
 }
 

@@ -34,7 +34,9 @@ double E_i=0;
 float K_i = 0.6;
 float K_p = 860;
 
-uint32_t ir_left[400]={0};
+uint32_t ir_left[200]={0};
+uint32_t ir_right[200]={0};
+uint32_t ir_center[200]={0};
 float theta_goal;
 uint32_t linear_velocity = LINEAR_VELOCITY;
 
@@ -99,7 +101,7 @@ void go_to_goal_controller(){
 
     duty_check();
 
-    motor_forward(right_duty_cycle, left_duty_cycle);
+    //motor_forward(right_duty_cycle, left_duty_cycle);
     robot_position_update(_robot);
 
     float x_err = (float) fabs((_robot->pose->x - _x_goal));
@@ -135,16 +137,18 @@ void go_to_goal_controller(){
    ir_distances(&(_robot->ir_distance->ir_left),&(_robot->ir_distance->ir_center),&(_robot->ir_distance->ir_right) );
 
 //    Debugging
-//   if (time < 500 && time >= 100  ){
-//       ir_left[time-100] = _robot->ir_distance->ir_left;
-//   }
-//   if (time ==500)
-//   {
-//       __no_operation();
-//   }
+   if (time < 500 && time >= 300  ){
+       ir_left[time-300] = _robot->ir_distance->ir_left;
+       ir_center[time-300] = _robot->ir_distance->ir_center;
+       ir_right[time-300] = _robot->ir_distance->ir_right;
+   }
+   if (time ==500)
+   {
+       __no_operation();
+   }
 
-   UART0_OutUDec5(_robot->ir_distance->ir_left); UART0_OutUDec5(_robot->ir_distance->ir_center); UART0_OutUDec5(_robot->ir_distance->ir_right);
-   UART0_InChar('\n') UART0_InChar('\r');
+//   UART0_OutUDec(_robot->ir_distance->ir_left); UART0_OutUDec(_robot->ir_distance->ir_center); UART0_OutUDec(_robot->ir_distance->ir_right);
+//   UART0_OutChar('\n'); UART0_OutChar('\r');
 }
 
 void go_to_goal_init(float x_g, float y_g, differential_robot_t * robot_pt, uint32_t p){
