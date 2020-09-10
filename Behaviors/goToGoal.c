@@ -19,8 +19,11 @@
 #include "pwm.h"
 #include "UART0.h"
 
+
+void go_to_goal_controller();
+
 // the linear velocity amplified by 100 for integer math purpose 
-#define LINEAR_VELOCITY 40000
+#define LINEAR_VELOCITY 35000
 #define DUTY_CYCLE 3750
 
 uint32_t time;
@@ -28,6 +31,7 @@ int32_t left_duty_cycle;
 int32_t right_duty_cycle;
 float _x_goal;
 float _y_goal;
+uint8_t * _goal_flag=NULL;
 differential_robot_t * _robot;
 
 double E_i=0;
@@ -68,6 +72,34 @@ void duty_check(){
     if (left_duty_cycle < -11000) left_duty_cycle = -11000;
 }
 
+void go_to_goal_init(float x_g, float y_g, differential_robot_t * robot_pt, uint32_t p, uint8_t * goal_flag){
+    _x_goal =  x_g ;// (x_g * 10)/16 ;  // todo make it discrete math
+    _y_goal = y_g;
+    _robot = robot_pt;
+    _goal_flag = goal_flag;
+
+    motor_init();
+    tachometer_init(&leftTachometer, &rightTachometer);
+    pwm_init(15000, 0);
+    timerA1_init(&go_to_goal_controller, p);
+
+    // UART0_Init();
+    // adc_init_channel_17_12_16();
+
+    //initialize the ADC for the IR distance sensor
+//    uint32_t *init_left=NULL;
+//    uint32_t * init_center=NULL;
+//    uint32_t * init_right=NULL;
+//    read_adc_17_12_16(init_left,init_center,init_right);
+
+    //initialize the Low Pass Filters for the ir distance sensors
+//    LPF_Init(*init_left,32);     // P9.0/channel 17
+//    LPF_Init2(*init_center,32);    // P4.1/channel 12
+//    LPF_Init3(*init_right,32);    // P9.1/channel 16
+
+    time=0;
+}
+
 void go_to_goal_controller(){
 
 //    if ( _robot->left->tachometer->ticks > 6500 || _robot->right->tachometer->ticks > 6500 )
@@ -101,29 +133,16 @@ void go_to_goal_controller(){
 
     duty_check();
 
-    //motor_forward(right_duty_cycle, left_duty_cycle);
+    motor_forward(right_duty_cycle, left_duty_cycle);
     robot_position_update(_robot);
 
     float x_err = (float) fabs((_robot->pose->x - _x_goal));
     float y_err = (float) fabs((_robot->pose->y - _y_goal));
 
-    float static back_flag = 0;
-    if ( x_err < .05 && y_err <.05 ){
-
-        _x_goal = 1.6;
-        _y_goal = -1.6;
-
-        if(back_flag==1){
-            _x_goal = 0;
-            _y_goal = -1.6;
-        }
-
-        if (back_flag==2){
+    if ( x_err < .03 && y_err <.03 ){
+        * _goal_flag = 1; // goal is reached
             motor_stop();
             timerA1_stop();
-            __no_operation();
-        }
-        back_flag++;
     }
 
     if(time == 150000 ){
@@ -134,47 +153,22 @@ void go_to_goal_controller(){
     time++;
 
 //    updating the IR distance measurements
-   ir_distances(&(_robot->ir_distance->ir_left),&(_robot->ir_distance->ir_center),&(_robot->ir_distance->ir_right) );
+   // ir_distances(&(_robot->ir_distance->ir_left),&(_robot->ir_distance->ir_center),&(_robot->ir_distance->ir_right) );
 
 //    Debugging
-   if (time < 500 && time >= 300  ){
-       ir_left[time-300] = _robot->ir_distance->ir_left;
-       ir_center[time-300] = _robot->ir_distance->ir_center;
-       ir_right[time-300] = _robot->ir_distance->ir_right;
-   }
-   if (time ==500)
-   {
-       __no_operation();
-   }
+   // if (time < 500 && time >= 300  ){
+   //     ir_left[time-300] = _robot->ir_distance->ir_left;
+   //     ir_center[time-300] = _robot->ir_distance->ir_center;
+   //     ir_right[time-300] = _robot->ir_distance->ir_right;
+   // }
+   // if (time ==500)
+   // {
+   //     __no_operation();
+   // }
 
 //   UART0_OutUDec(_robot->ir_distance->ir_left); UART0_OutUDec(_robot->ir_distance->ir_center); UART0_OutUDec(_robot->ir_distance->ir_right);
 //   UART0_OutChar('\n'); UART0_OutChar('\r');
 }
 
-void go_to_goal_init(float x_g, float y_g, differential_robot_t * robot_pt, uint32_t p){
-    _x_goal =  x_g ;// (x_g * 10)/16 ;  // todo make it discrete math
-    _y_goal = y_g;
-    _robot = robot_pt;
 
-    motor_init();
-    tachometer_init(&leftTachometer, &rightTachometer);
-    pwm_init(15000, 0);
-    timerA1_init(&go_to_goal_controller, p);
-
-    UART0_Init();
-    adc_init_channel_17_12_16();
-
-    //initialize the ADC for the IR distance sensor
-//    uint32_t *init_left=NULL;
-//    uint32_t * init_center=NULL;
-//    uint32_t * init_right=NULL;
-//    read_adc_17_12_16(init_left,init_center,init_right);
-
-    //initialize the Low Pass Filters for the ir distance sensors
-//    LPF_Init(*init_left,32);     // P9.0/channel 17
-//    LPF_Init2(*init_center,32);    // P4.1/channel 12
-//    LPF_Init3(*init_right,32);    // P9.1/channel 16
-
-    time=0;
-}
 

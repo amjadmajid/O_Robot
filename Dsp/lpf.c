@@ -53,28 +53,6 @@ uint32_t x[1024];   // two copies of MACQ
 uint32_t *Pt;       // pointer to current
 uint32_t I1;        // index to oldest
 uint32_t LPFSum;    // sum of the last Size samples
-void LPF_Init_old(uint32_t initial, uint32_t size){ int i;
-  if(size>512) size=512; // max
-  Size = size;
-  Pt = &x[0];
-  LPFSum = Size*initial; // prime MACQ with initial data
-  for(i=0; i<2*Size; i++){
-    x[i] = initial;
-  }
-}
-// calculate one filter output, called at sampling rate
-// Input: new ADC data   Output: filter output
-// y(n) = (x(n)+x(n-1)+...+x(n-Size-1)/Size
-uint32_t LPF_Calc_old(uint32_t newdata){
-  if(Pt == &x[0]){
-    Pt = &x[Size-1];              // wrap
-  } else{
-    Pt--;                         // make room for data
-  }
-  LPFSum = LPFSum+newdata -*Pt;   // subtract oldest, add newest
-  *Pt = *(Pt+Size) = newdata;     // two copies of the new data
-  return LPFSum/Size;
-}
 
 void LPF_Init(uint32_t initial, uint32_t size){ int i;
   if(size>1024) size=1024; // max
