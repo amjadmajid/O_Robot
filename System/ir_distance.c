@@ -12,25 +12,22 @@
 
 #define MAXDISTANCE 800
 
-uint32_t left_convert(uint32_t nl){        // returns left distance in mm
-  int32_t d = 1195172/(nl-880)+70;
+uint32_t left_convert(uint32_t nl){        // returns left distance in cm
+  uint32_t d = 51982/(nl + -1289);+7;
   if (d > MAXDISTANCE){d = MAXDISTANCE;}
-  if (d < 0){d=0;}
-  return (uint32_t) d;
+  return d;
 }
 
 uint32_t center_convert(uint32_t nc){   // returns center distance in mm
-    int32_t d = 1195172/(nc-880)+70;
-    if (d > MAXDISTANCE){d= MAXDISTANCE;}
-    if (d < 0){d=0;}
-    return (uint32_t) d;
+  uint32_t d = 51982/(nl + -1289);+7;
+  if (d > MAXDISTANCE){d = MAXDISTANCE;}
+  return d;
 }
 
 uint32_t right_convert(uint32_t nr){      // returns right distance in mm
-    int32_t d = 1195172/(nr-880)+70;
-    if (d > MAXDISTANCE){d = MAXDISTANCE;}
-    if (d < 0){d=0;}
-    return (uint32_t) d;
+  uint32_t d = 51982/(nl + -1289);+7;
+  if (d > MAXDISTANCE){d = MAXDISTANCE;}
+  return d;
 }
 
 void adc_init_channel_17_12_16(void){
