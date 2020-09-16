@@ -9,6 +9,7 @@
 #include "msp.h"
 #include "clock.h"
 #include "interruptHandler.h"
+#include "avoidObstacles.h"
 
 #define CONTROL_PERIOD 5000
 #define PHATH_LEN 6
@@ -43,9 +44,20 @@ void main(void)
 
     differential_robot_t* robot = robot_init();
     clock_init_48MHz();
+    UART0_Init();
     press_buttons_to_go();
     enableInterrupts();
 
+//--------------avoid obstacles behavior-----------------------
+
+avoid_obstacle_init(robot, CONTROL_PERIOD);
+
+while(1) {
+    waitForInterrupt();
+}
+
+//--------------Go to goal behavior-----------------------
+#if 0   
     // used by the control layer to notify the application layer
     goal_flag = & goal_reached; 
     uint32_t location_cntr = 0;
@@ -83,4 +95,6 @@ void main(void)
       }
       waitForInterrupt();
     }
+#endif 
+
 }

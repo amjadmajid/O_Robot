@@ -19,13 +19,13 @@ uint32_t left_convert(uint32_t nl){        // returns left distance in cm
 }
 
 uint32_t center_convert(uint32_t nc){   // returns center distance in mm
-  uint32_t d = 51982/(nl + -1289);+7;
+  uint32_t d = 51982/(nc + -1289);+7;
   if (d > MAXDISTANCE){d = MAXDISTANCE;}
   return d;
 }
 
 uint32_t right_convert(uint32_t nr){      // returns right distance in mm
-  uint32_t d = 51982/(nl + -1289);+7;
+  uint32_t d = 51982/(nr + -1289);+7;
   if (d > MAXDISTANCE){d = MAXDISTANCE;}
   return d;
 }
