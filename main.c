@@ -32,7 +32,7 @@ void main(void)
     initialize();
     differential_robot_t* robot = robot_init();
 
-#if 0
+#if 1
 //--------------avoid obstacles behavior-----------------------
 
 avoid_obstacle_init(robot, CONTROL_PERIOD);

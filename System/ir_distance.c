@@ -9,23 +9,29 @@
 
 #include "msp.h"
 #include "lpf.h"
+#include "UART0.h"
 
 #define MAXDISTANCE 800
 
 uint32_t left_convert(uint32_t nl){        // returns left distance in mm
-  uint32_t d = 519821/(nl + -12891)+70;
+  uint32_t d = 1195172/(nl-880)+70;
   if (d > MAXDISTANCE){d = MAXDISTANCE;}
   return d;
 }
 
 uint32_t center_convert(uint32_t nc){   // returns center distance in mm
-  uint32_t d = 519821/(nc + -12891)+70;
+  
+//  UART0_OutUDec(nc);
+//  UART0_OutChar('\n');
+//  UART0_OutChar('\r');
+  
+  uint32_t d = 1195172/(nc-880)+70;
   if (d > MAXDISTANCE){d = MAXDISTANCE;}
   return d;
 }
 
 uint32_t right_convert(uint32_t nr){      // returns right distance in mm
-  uint32_t d = 519821/(nr + -12891)+70;
+  uint32_t d = 1195172/(nr-880)+70;
   if (d > MAXDISTANCE){d = MAXDISTANCE;}
   return d;
 }

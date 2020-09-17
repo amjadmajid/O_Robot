@@ -40,8 +40,8 @@ void avoid_obstacle_controller()
 	//    updating the IR distance measurements
   ir_distances(&(_robot->ir_distance->ir_left),&(_robot->ir_distance->ir_center),&(_robot->ir_distance->ir_right) );
 
-  UART0_OutUDec(_robot->ir_distance->ir_left); UART0_OutChar(' ');
-  UART0_OutUDec(_robot->ir_distance->ir_center); UART0_OutChar(' ');
-  UART0_OutUDec(_robot->ir_distance->ir_right); 
-  UART0_OutChar('\n'); UART0_OutChar('\r');
+   UART0_OutUDec(_robot->ir_distance->ir_left); UART0_OutChar(' ');
+   UART0_OutUDec(_robot->ir_distance->ir_center); UART0_OutChar(' ');
+   UART0_OutUDec(_robot->ir_distance->ir_right);
+   UART0_OutChar('\n'); UART0_OutChar('\r');
 }
