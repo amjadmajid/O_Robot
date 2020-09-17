@@ -13,7 +13,6 @@
 #include "msp.h"
 #include "timer_A1.h"
 #include "motor.h"
-#include "ir_distance.h"
 #include "lpf.h"
 #include "motor.h"
 #include "pwm.h"
@@ -83,27 +82,10 @@ void go_to_goal_init(float x_g, float y_g, differential_robot_t * robot_pt, uint
     pwm_init(15000, 0);
     timerA1_init(&go_to_goal_controller, p);
 
-    // UART0_Init();
-    // adc_init_channel_17_12_16();
-
-    //initialize the ADC for the IR distance sensor
-//    uint32_t *init_left=NULL;
-//    uint32_t * init_center=NULL;
-//    uint32_t * init_right=NULL;
-//    read_adc_17_12_16(init_left,init_center,init_right);
-
-    //initialize the Low Pass Filters for the ir distance sensors
-//    LPF_Init(*init_left,32);     // P9.0/channel 17
-//    LPF_Init2(*init_center,32);    // P4.1/channel 12
-//    LPF_Init3(*init_right,32);    // P9.1/channel 16
-
     time=0;
 }
 
 void go_to_goal_controller(){
-
-//    P4->OUT |=BIT3;
-//    P4->OUT &=~BIT3;
 
     float delta_x = _x_goal - _robot->pose->x;
     float delta_y = _y_goal - _robot->pose->y;
@@ -111,20 +93,23 @@ void go_to_goal_controller(){
 
     float heading_error = theta_goal - _robot->pose->theta;
     float err = (float) atan2(sin(heading_error), cos(heading_error));
-    // float err = atan2(sin(theta_goal), cos(theta_goal));
+
     E_i +=err;
     float U_i =  (K_i * E_i);
     float U_p =  (K_p * err);
     float w = U_p + U_i;
+
+//--------------------------------Acceleration--------------------------------------
+// # Todo Can we use acceleration ?
 
 //    if (time < 400)
 //    {
 //        linear_velocity +=50;
 //    }
 
-    // left_duty_cycle = (linear_velocity - w * L )/(meter_per_rev);
-    // right_duty_cycle = (linear_velocity + w * L )/(meter_per_rev);
-
+//  left_duty_cycle = (linear_velocity - w * L )/(meter_per_rev);
+//  right_duty_cycle = (linear_velocity + w * L )/(meter_per_rev);
+//--------------------------------Acceleration--------------------------------------
 
     left_duty_cycle = (linear_velocity - w * 14)/7 ;
     right_duty_cycle = (linear_velocity + w * 14)/7 ;
@@ -142,10 +127,10 @@ void go_to_goal_controller(){
     float x_err = (float) fabs((_robot->pose->x - _x_goal));
     float y_err = (float) fabs((_robot->pose->y - _y_goal));
 
-    UART0_OutUDec((uint32_t) (x_err  * 100) );
-    UART0_OutChar(' ');
-    UART0_OutUDec((uint32_t) (y_err *100) );
-    UART0_OutChar('\n'); UART0_OutChar('\r');
+//    UART0_OutUDec((uint32_t) (x_err  * 100) );
+//    UART0_OutChar(' ');
+//    UART0_OutUDec((uint32_t) (y_err *100) );
+//    UART0_OutChar('\n'); UART0_OutChar('\r');
 
 
     if ( x_err < .05 && y_err <.05 ){
@@ -160,23 +145,6 @@ void go_to_goal_controller(){
         __no_operation();
     }
     time++;
-
-//    updating the IR distance measurements
-   // ir_distances(&(_robot->ir_distance->ir_left),&(_robot->ir_distance->ir_center),&(_robot->ir_distance->ir_right) );
-
-//    Debugging
-   // if (time < 500 && time >= 300  ){
-   //     ir_left[time-300] = _robot->ir_distance->ir_left;
-   //     ir_center[time-300] = _robot->ir_distance->ir_center;
-   //     ir_right[time-300] = _robot->ir_distance->ir_right;
-   // }
-   // if (time ==500)
-   // {
-   //     __no_operation();
-   // }
-
-//   UART0_OutUDec(_robot->ir_distance->ir_left); UART0_OutUDec(_robot->ir_distance->ir_center); UART0_OutUDec(_robot->ir_distance->ir_right);
-//   UART0_OutChar('\n'); UART0_OutChar('\r');
 }
 
 

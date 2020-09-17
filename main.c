@@ -1,14 +1,12 @@
-#include <differentialRobot.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <math.h>
 
-#include "UART0.h"
+#include "msp.h"
+#include "initialization.h"
+#include "differentialRobot.h"
 #include "goToGoal.h"
 #include "motor.h"
 #include "timer_A1.h"
-#include "msp.h"
-#include "clock.h"
 #include "interruptHandler.h"
 #include "avoidObstacles.h"
 
@@ -25,38 +23,14 @@ uint8_t * goal_flag = NULL;
 uint8_t goal_reached = 0;
 uint32_t pause_cntr = 0;
 
-uint8_t read_buttons(){
-    // P1->IN works in a negative logic fashion
-    return (~(P1->IN) & BIT1 && ~(P1->IN) & BIT4 );
-}
 
-void press_buttons_to_go(void){
-    P1->SEL0 &= ~(BIT1+BIT4);
-    P1->SEL1 &= ~(BIT1+BIT4);
-    P1->DIR &= ~(BIT1+BIT4);
-    P1->REN |=  (BIT1+BIT4);
-    P1->OUT |=  (BIT1+BIT4); // pull-up resistors
-
-    while( read_buttons() == 0x00 ) ; // wait for press
-    while( read_buttons() != 0x00 ) ; // wait for release
-}
 
 
 void main(void)
  {
-    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
-
-    // Debug pins
-    P4->DIR |=BIT3;
-    P4->OUT &= ~BIT3;
-
-    disableInterrupts();
-
+    // initialize the clock, buttons to go, and UART for debugging
+    initialize();
     differential_robot_t* robot = robot_init();
-    clock_init_48MHz();
-    UART0_Init();
-    press_buttons_to_go();
-    enableInterrupts();
 
 #if 0
 //--------------avoid obstacles behavior-----------------------
