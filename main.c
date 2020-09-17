@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "UART0.h"
 #include "goToGoal.h"
 #include "motor.h"
 #include "timer_A1.h"
@@ -12,9 +13,14 @@
 #include "avoidObstacles.h"
 
 #define CONTROL_PERIOD 5000
-#define PHATH_LEN 6
-float path[PHATH_LEN][2]= { {0.8,0}, {1.6,0}, {1.6, -0.8}, {1.6,-1.6},  {0,-1.6},  {0,0}  };
-uint8_t pauses[] =        {  1,      0,       1,            0,           0,         0     };
+//#define PHATH_LEN 6
+//float path[PHATH_LEN][2]= { {0.8,0}, {1.6,0}, {1.6, -0.8}, {1.6,-1.6},  {0,-1.6},  {0,0}  };
+//uint8_t pauses[] =        {  1,      0,       1,            0,           0,         0     };
+
+#define PHATH_LEN 2
+float path[PHATH_LEN][2]= { {2,0}, {2,2} };
+uint8_t pauses[] =        {  0,      0   };
+
 uint8_t * goal_flag = NULL;
 uint8_t goal_reached = 0;
 uint32_t pause_cntr = 0;
@@ -40,6 +46,10 @@ void main(void)
  {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
 
+    // Debug pins
+    P4->DIR |=BIT3;
+    P4->OUT &= ~BIT3;
+
     disableInterrupts();
 
     differential_robot_t* robot = robot_init();
@@ -48,6 +58,7 @@ void main(void)
     press_buttons_to_go();
     enableInterrupts();
 
+#if 0
 //--------------avoid obstacles behavior-----------------------
 
 avoid_obstacle_init(robot, CONTROL_PERIOD);
@@ -57,7 +68,7 @@ while(1) {
 }
 
 //--------------Go to goal behavior-----------------------
-#if 0   
+#else
     // used by the control layer to notify the application layer
     goal_flag = & goal_reached; 
     uint32_t location_cntr = 0;
@@ -73,7 +84,7 @@ while(1) {
         enableInterrupts();
         
         // check if the robot has reached the final location (or goal)
-        if(location_cntr == (PHATH_LEN))
+        if(location_cntr == PHATH_LEN )
         {
             motor_stop();
             timerA1_stop();

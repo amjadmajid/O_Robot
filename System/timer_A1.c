@@ -18,7 +18,6 @@ void (*timerA1_task)(void);   // a hook for user defined function
 void timerA1_init(void(*task)(void), uint16_t period){
 
 	// Hook the user task to the callback
-    P1->DIR |=BIT0;
     timerA1_task = task;
 
 	TIMER_A1->CTL &=~0x0030;  // MC=00b, halt timer A1
@@ -29,7 +28,7 @@ void timerA1_init(void(*task)(void), uint16_t period){
 								  //bit8=0b, campare mode
 								  //bit15-14=00b, no capture mode
 	TIMER_A1->CCR[0]=(period-1);  // compare match value
-	TIMER_A1->EX0 = 0x0007;		  // divide the clock by 8
+	TIMER_A1->EX0 = 0x0005;		  // divide the clock by 6
 	// To set the priority
 	// // Look at table 5.1 from the book "Real-Time Interfacing to the MSP432 Microcontoller"
 	// // First, select the priority register number from the column "NNIC priority"

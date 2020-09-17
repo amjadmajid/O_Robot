@@ -35,8 +35,8 @@ uint8_t * _goal_flag=NULL;
 differential_robot_t * _robot;
 
 double E_i=0;
-float K_i = 0.6;
-float K_p = 860;
+float K_i = 2.2;
+float K_p = 630;
 
 uint32_t ir_left[200]={0};
 uint32_t ir_right[200]={0};
@@ -102,10 +102,8 @@ void go_to_goal_init(float x_g, float y_g, differential_robot_t * robot_pt, uint
 
 void go_to_goal_controller(){
 
-//    if ( _robot->left->tachometer->ticks > 6500 || _robot->right->tachometer->ticks > 6500 )
-//    {
-//        time=150000;
-//    }
+//    P4->OUT |=BIT3;
+//    P4->OUT &=~BIT3;
 
     float delta_x = _x_goal - _robot->pose->x;
     float delta_y = _y_goal - _robot->pose->y;
@@ -131,6 +129,11 @@ void go_to_goal_controller(){
     left_duty_cycle = (linear_velocity - w * 14)/7 ;
     right_duty_cycle = (linear_velocity + w * 14)/7 ;
 
+//    UART0_OutUDec((uint32_t) left_duty_cycle );
+//    UART0_OutChar(' ');
+//    UART0_OutUDec((uint32_t) right_duty_cycle );
+//    UART0_OutChar('\n'); UART0_OutChar('\r');
+
     duty_check();
 
     motor_forward(right_duty_cycle, left_duty_cycle);
@@ -139,7 +142,13 @@ void go_to_goal_controller(){
     float x_err = (float) fabs((_robot->pose->x - _x_goal));
     float y_err = (float) fabs((_robot->pose->y - _y_goal));
 
-    if ( x_err < .03 && y_err <.03 ){
+    UART0_OutUDec((uint32_t) (x_err  * 100) );
+    UART0_OutChar(' ');
+    UART0_OutUDec((uint32_t) (y_err *100) );
+    UART0_OutChar('\n'); UART0_OutChar('\r');
+
+
+    if ( x_err < .05 && y_err <.05 ){
         * _goal_flag = 1; // goal is reached
             motor_stop();
             timerA1_stop();
