@@ -63,13 +63,9 @@ void robot_position_update(differential_robot_t * robot){
     _wheel_distance_update_mm( robot->right->tachometer );
     _wheel_distance_update_mm( robot->left->tachometer );
 
-//    printf("%d %d\n",  (uint16_t)(robot->right->tachometer), (uint16_t)(robot->right->tachometer));
-
     float d_r = robot->right->tachometer->delta_dis;
     float d_l = robot->left->tachometer->delta_dis;
 	float d_c = _robot_distance_update_mm(d_r, d_l);
-
-//	printf("%d %d\n",  (uint16_t)(d_r), (uint16_t)(d_l));
 
 	float x = robot->pose->x;
 	float y = robot->pose->y;
@@ -93,7 +89,6 @@ void robot_position_update(differential_robot_t * robot){
 //	robot_theta[cntr_robot_pose_debug]= robot->pose->theta;
 //	cntr_robot_pose_debug++;
 
-//	printf("%d %d %d\n", (uint16_t)(x*100), (uint16_t)(y*1000), (uint16_t)(theta*100));
 }
 
 
