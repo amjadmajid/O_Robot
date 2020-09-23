@@ -12,6 +12,9 @@ void(*taskLeft)(void);
 void(*taskRight)(void);
 
 void tachometer_init(void(*userTaskLeft)(void), void(*userTaskRight)(void) ){
+
+    P5->DIR |=BIT4+BIT5;
+    P5->OUT &=~(BIT4+BIT5);
 	
 	//setup the hooks for the tachometers ISRs
 	taskLeft =  userTaskLeft;
@@ -54,20 +57,24 @@ void tachometer_init(void(*userTaskLeft)(void), void(*userTaskRight)(void) ){
 }
 
 
-void PORT6_IRQHandler(void){
-	if(P6->IFG & BIT1){
-	    P6->IFG &= ~BIT1;
-		// execute user hook
-		(*taskRight)();
-	}
-}
-
-
 void PORT5_IRQHandler(void){
     if(P5->IFG & BIT0){
         P5->IFG &= ~BIT0;
         // execute user hook
         (*taskLeft)();
+        P5->OUT |=BIT4;
+        P5->OUT &=~BIT4;
     }
 }
+
+void PORT6_IRQHandler(void){
+	if(P6->IFG & BIT1){
+	    P6->IFG &= ~BIT1;
+		// execute user hook
+		(*taskRight)();
+        P5->OUT |=BIT5;
+        P5->OUT &=~BIT5;
+	}
+}
+
 

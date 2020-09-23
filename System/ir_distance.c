@@ -42,7 +42,7 @@ void adc_init_channel_17_12_16(void){
   ADC14->CTL0 = ADC14_CTL0_ON | ADC14_CTL0_MSC | ADC14_CTL0_SHT0__32 | ADC14_CTL0_SHT1__32 | ADC14_CTL0_CONSEQ_1 |
                 ADC14_CTL0_SSEL__SMCLK | ADC14_CTL0_DIV__1 | ADC14_CTL0_SHP ;          //  single, SMCLK, on, disabled, /1, 32 SHM
   ADC14->CTL1 = 0x00000030;                 // ADC14MEM0, 14-bit, ref on, regular power
-  ADC14->MCTL[0] = ADC14_MCTLN_INCH_12;
+  ADC14->MCTL[0] = ADC14_MCTLN_INCH_3;
   ADC14->MCTL[1] = ADC14_MCTLN_INCH_16;
   ADC14->MCTL[2] = ADC14_MCTLN_INCH_17 | ADC14_MCTLN_EOS; ;         // 0 to 3.3V, channel 17
   ADC14->IER0 = 0; // no interrupts

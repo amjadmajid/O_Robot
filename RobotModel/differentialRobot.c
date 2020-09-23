@@ -5,9 +5,15 @@
  */
 
 #include "differentialRobot.h"
-#include <stdio.h>
+#include "printf.h"
 #include <math.h>
 #define MAX_IR 800 // max ir distances in mm
+
+//uint16_t const  data_len_robot_pose_debug = 200;
+//uint16_t static cntr_robot_pose_debug=0;
+//uint32_t static robot_x[data_len_robot_pose_debug]={0};
+//uint32_t static robot_y[data_len_robot_pose_debug]={0};
+//uint32_t static robot_theta[data_len_robot_pose_debug]={0};
 
 // initialize the robot data structure
 tachometer_t right_tachometer = {0,0,0};
@@ -56,9 +62,14 @@ void _wheel_distance_update_mm( tachometer_t * tachometer){
 void robot_position_update(differential_robot_t * robot){
     _wheel_distance_update_mm( robot->right->tachometer );
     _wheel_distance_update_mm( robot->left->tachometer );
+
+//    printf("%d %d\n",  (uint16_t)(robot->right->tachometer), (uint16_t)(robot->right->tachometer));
+
     float d_r = robot->right->tachometer->delta_dis;
     float d_l = robot->left->tachometer->delta_dis;
 	float d_c = _robot_distance_update_mm(d_r, d_l);
+
+//	printf("%d %d\n",  (uint16_t)(d_r), (uint16_t)(d_l));
 
 	float x = robot->pose->x;
 	float y = robot->pose->y;
@@ -72,7 +83,21 @@ void robot_position_update(differential_robot_t * robot){
 	robot->pose->x = x;
 	robot->pose->y = y;
 	robot->pose->theta = atan2( sin(theta), cos(theta));
+
+//	if(cntr_robot_pose_debug >=data_len_robot_pose_debug)
+//	{
+//		cntr_robot_pose_debug=0;
+//	}
+//	robot_x[cntr_robot_pose_debug] = x;
+//	robot_y[cntr_robot_pose_debug] = y;
+//	robot_theta[cntr_robot_pose_debug]= robot->pose->theta;
+//	cntr_robot_pose_debug++;
+
+//	printf("%d %d %d\n", (uint16_t)(x*100), (uint16_t)(y*1000), (uint16_t)(theta*100));
 }
+
+
+
 
 
 

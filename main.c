@@ -48,6 +48,7 @@ while(1) {
     uint32_t location_cntr = 0;
 
     go_to_goal_init(path[location_cntr][0] ,path[location_cntr][1] , robot,CONTROL_PERIOD, goal_flag);
+    enableInterrupts();
 
     while(1){
       if (goal_reached)

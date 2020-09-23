@@ -14,7 +14,6 @@
 #include "timer_A1.h"
 #include "motor.h"
 #include "lpf.h"
-#include "motor.h"
 #include "pwm.h"
 #include "UART0.h"
 
@@ -33,17 +32,17 @@ float _y_goal;
 uint8_t * _goal_flag=NULL;
 differential_robot_t * _robot;
 
-double E_i=0;
-float K_i = 2.2;
-float K_p = 630;
+double static E_i=0;
+float static K_i = 2.2;
+float static K_p = 630;
 
-uint32_t ir_left[200]={0};
-uint32_t ir_right[200]={0};
-uint32_t ir_center[200]={0};
+uint32_t static ir_left[200]={0};
+uint32_t static ir_right[200]={0};
+uint32_t static ir_center[200]={0};
 float theta_goal;
-uint32_t linear_velocity = LINEAR_VELOCITY;
+uint32_t static linear_velocity = LINEAR_VELOCITY;
 
-void leftTachometer(void){
+void static leftTachometer(void){
   int32_t tks = _robot->left->tachometer->ticks;
   if(left_duty_cycle >= 0){
       tks++;
@@ -53,7 +52,7 @@ void leftTachometer(void){
   _robot->left->tachometer->ticks = tks;
 }
 
-void rightTachometer(void){
+void static rightTachometer(void){
     int32_t tks = _robot->right->tachometer->ticks;
     if(right_duty_cycle >= 0){
         tks++;
@@ -63,7 +62,7 @@ void rightTachometer(void){
     _robot->right->tachometer->ticks = tks;
 }
 
-void duty_check(){
+void static duty_check(){
     // control the max and the min of the duty cycle
     if (right_duty_cycle > 11000) right_duty_cycle = 11000;
     if (right_duty_cycle < -11000) right_duty_cycle = -11000;
