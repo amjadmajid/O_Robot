@@ -5,7 +5,7 @@
  */
 
 #include "differentialRobot.h"
-#include "printf.h"
+//#include "printf.h"
 #include <math.h>
 #define MAX_IR 800 // max ir distances in mm
 
