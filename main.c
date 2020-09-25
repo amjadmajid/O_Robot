@@ -4,11 +4,10 @@
 #include "msp.h"
 #include "initialization.h"
 #include "differentialRobot.h"
-#include "goToGoal.h"
 #include "motor.h"
 #include "timer_A1.h"
 #include "interruptHandler.h"
-#include "avoidObstacles.h"
+#include "controller.h"
 
 #define CONTROL_PERIOD 5000
 //#define PHATH_LEN 6
@@ -19,10 +18,11 @@
 float path[PHATH_LEN][2]= { {2,0}, {2,2} };
 uint8_t pauses[] =        {  0,      0   };
 
-uint8_t * goal_flag = NULL;
+
 uint8_t goal_reached = 0;
 uint32_t pause_cntr = 0;
 
+uint32_t location_cntr = 0;
 
 
 
@@ -32,20 +32,23 @@ void main(void)
     initialize();
     differential_robot_t* robot = robot_init();
 
-#if 1
+    controller_init(path[location_cntr][0] ,path[location_cntr][1] , robot,CONTROL_PERIOD, &goal_reached);
+
+    while(1) {
+        waitForInterrupt();
+    }
+
+#if 0
 //--------------avoid obstacles behavior-----------------------
 
-avoid_obstacle_init(robot, CONTROL_PERIOD);
+    avoid_obstacle_init(robot, CONTROL_PERIOD);
 
-while(1) {
-    waitForInterrupt();
-}
+    while(1) {
+        waitForInterrupt();
+    }
 
 //--------------Go to goal behavior-----------------------
-#else
-    // used by the control layer to notify the application layer
-    goal_flag = & goal_reached; 
-    uint32_t location_cntr = 0;
+
 
     go_to_goal_init(path[location_cntr][0] ,path[location_cntr][1] , robot,CONTROL_PERIOD, goal_flag);
     enableInterrupts();
