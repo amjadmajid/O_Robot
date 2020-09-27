@@ -15,6 +15,15 @@
 //#include "printf.h"
 #include "pwm.h"
 
+
+extern void duty_check(int32_t *left_duty_cycle, int32_t *right_duty_cycle );
+
+extern differential_robot_t * _robot;
+extern uint32_t  linear_velocity;
+extern int32_t   left_duty_cycle;
+extern int32_t   right_duty_cycle;
+
+
 #define LEN_OA_DEBUG 300
 uint16_t cntr_oa_debug=0;
 uint32_t ir_left_oa[LEN_OA_DEBUG]={0};
@@ -26,82 +35,10 @@ uint32_t ir_right_oa[LEN_OA_DEBUG]={0};
 //float w_oa[LEN_OA_DEBUG];
 
 
-#define DUTY_CYCLE 3750
-
-// the linear velocity amplified by 100 for integer math purpose
-uint32_t static linear_velocity = 35000;
 double static E_i=0;
 float static K_i = 5.6;
 float static K_p = 830;
-int32_t left_duty_cycle ;
-int32_t right_duty_cycle ;
 
-void avoid_obstacle_controller();
-
-differential_robot_t * _robot;
-
-// ToDo move it to its own utility  file
-void static duty_check(){
-    // control the max and the min of the duty cycle
-    if (right_duty_cycle > 11000) right_duty_cycle = 11000;
-    if (right_duty_cycle < -11000) right_duty_cycle = -11000;
-    if (left_duty_cycle > 11000) left_duty_cycle = 11000;
-    if (left_duty_cycle < -11000) left_duty_cycle = -11000;
-}
-
-void static leftTachometer(void){
-  int32_t tks = _robot->left->tachometer->ticks;
-  if(left_duty_cycle >= 0){
-      tks++;
-  }else{
-    tks--;
-  }
-  _robot->left->tachometer->ticks = tks;
-}
-
-void static rightTachometer(void){
-    int32_t tks = _robot->right->tachometer->ticks;
-    if(right_duty_cycle >= 0){
-        tks++;
-    }else{
-        tks--;
-    }
-    _robot->right->tachometer->ticks = tks;
-}
-
-void avoid_obstacle_init(differential_robot_t * robot_pt, uint32_t p)
-{
-     P1->OUT &=~BIT5;
-     P1->DIR |=BIT5;
-
-    _robot = robot_pt;
-    motor_init();
-    tachometer_init(&leftTachometer, &rightTachometer);
-    pwm_init(15000, 0);
-    enableInterrupts();
-    timerA1_init(&avoid_obstacle_controller, p);
-    adc_init_channel_17_12_16();
-
-    //initialize the ADC for the IR distance sensor
-   uint32_t *init_left=NULL;
-   uint32_t * init_center=NULL;
-   uint32_t * init_right=NULL;
-
-   read_adc_17_12_16(init_left,init_center,init_right);
-
-    //initialize the Low Pass Filters for the ir distance sensors
-   LPF_Init(*init_left,32);     // P9.0/channel 17 
-   LPF_Init2(*init_center,32);    // P4.1/channel 12
-   LPF_Init3(*init_right,32);    // P9.1/channel 16
-
-   // initialize debug arrays
-//   uint16_t i;
-//   for(i = 0; i < LEN_OA_DEBUG; i++){
-//       theta_current[i]=0;
-//       theta_goal[i]=0;
-//   }
-
-}
 
 typedef struct 
 {
@@ -148,8 +85,6 @@ vector_2d convert2wf(vector_2d robot_sensor, int32_t x_r, int32_t y_r, float the
 
 void avoid_obstacle_controller()
 {
-	//    updating the IR distance measurements
-  ir_distances(&(_robot->ir_distance->ir_left),&(_robot->ir_distance->ir_center),&(_robot->ir_distance->ir_right) );
 
 //    if(cntr_oa_debug < LEN_OA_DEBUG){
 //        ir_left_oa[cntr_oa_debug] = _robot->ir_distance->ir_left;
@@ -210,7 +145,7 @@ void avoid_obstacle_controller()
 //      cntr_oa_debug++;
 //  }
 
-  duty_check();
+  duty_check(&left_duty_cycle, &right_duty_cycle);
 
   motor_forward(right_duty_cycle, left_duty_cycle);
   robot_position_update(_robot);

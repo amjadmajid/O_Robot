@@ -10,6 +10,6 @@
 #ifndef BEHAVIORS_INCLUDE_GO_TO__GOAL_H_
 #define BEHAVIORS_INCLUDE_GO_TO__GOAL_H_
 
-void go_to_goal_init(float x_g, float y_g, differential_robot_t * robot_pt, uint32_t p, uint8_t * goal_flag);
+void go_to_goal_controller();
 
 #endif /* BEHAVIORS_INCLUDE_GO_TO__GOAL_H_ */
