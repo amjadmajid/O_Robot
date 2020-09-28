@@ -14,7 +14,7 @@
 #include "UART0.h"
 //#include "printf.h"
 #include "pwm.h"
-
+#include "vectorTranslation.h"
 
 extern void duty_check(int32_t *left_duty_cycle, int32_t *right_duty_cycle );
 
@@ -36,52 +36,10 @@ uint32_t ir_right_oa[LEN_OA_DEBUG]={0};
 
 
 double static E_i=0;
-float static K_i = 5.6;
+float static K_i = 3.6;
 float static K_p = 830;
 
 
-typedef struct 
-{
-  float x;
-  float y;
-} vector_2d;
-
-// convert the sensor measurement to the robot frame of reference
-vector_2d convert2rf(int32_t x_s, int32_t y_s, float theta, uint32_t ir_distance)
-{
-  vector_2d sensor_vec;
-  float theta_tmp = theta - 0.785;
-  if ( theta_tmp < 0.01 && theta_tmp > 0 ) // check if theta is +pi/4
-  {
-    // cos(+-pi/4) = sin(pi/4) = 0.707;
-    float tmp = ((707 * ir_distance)/1000);
-    sensor_vec.x = tmp + x_s;
-    sensor_vec.y = tmp + y_s;
-  }
-  else if ( theta_tmp < 0.01  ) // check if theta is -pi/4
-  {
-     // sin(- pi/4) = -0.707;
-    float tmp = ((707 * ir_distance)/1000);
-    sensor_vec.x = tmp + x_s;
-    sensor_vec.y = y_s - tmp ;
-  }else{
-    sensor_vec.x = cos(theta) * ir_distance + x_s;
-    sensor_vec.y = sin(theta) * ir_distance + y_s;
-  }
-
-  return sensor_vec;
-}
-
-// convert to the world frame of reference
-vector_2d convert2wf(vector_2d robot_sensor, int32_t x_r, int32_t y_r, float theta){
-
-  vector_2d robot_vec;
-
-  robot_vec.x = cos(theta) * robot_sensor.x - sin(theta) * robot_sensor.y + x_r;
-  robot_vec.y = sin(theta) * robot_sensor.x + cos(theta) * robot_sensor.y + y_r;
-
-  return robot_vec;
-}
 
 void avoid_obstacle_controller()
 {
@@ -94,17 +52,19 @@ void avoid_obstacle_controller()
 
 
   // pi/4= 0.785
-  vector_2d left_sensor_rf = convert2rf(50,70,  0.785, _robot->ir_distance->ir_left);
-  vector_2d right_sensor_rf = convert2rf(50,-70,-0.785, _robot->ir_distance->ir_right);
+vector_2d left_sensor_rf = convert2rf(50,70,  0.785, _robot->ir_distance->ir_left);
+vector_2d center_sensor_rf = convert2rf(50,-70, 0, _robot->ir_distance->ir_center);
+vector_2d right_sensor_rf = convert2rf(50,-70,-0.785, _robot->ir_distance->ir_right);
 
-  vector_2d left_sensor_wf =  convert2wf(left_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
-  vector_2d rihgt_sensor_wf =  convert2wf(right_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
+vector_2d left_sensor_wf =  convert2wf(left_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
+vector_2d center_sensor_wf =  convert2wf(center_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
+vector_2d rihgt_sensor_wf =  convert2wf(right_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
 
-  float x_dir = left_sensor_wf.x + rihgt_sensor_wf.x;
-  float y_dir = left_sensor_wf.y + rihgt_sensor_wf.y;
+float x_dir = left_sensor_wf.x + rihgt_sensor_wf.x + center_sensor_wf.x;
+float y_dir = left_sensor_wf.y + rihgt_sensor_wf.y + center_sensor_wf.y;
 
-  float x_g = x_dir - _robot->pose->x;
-  float y_g = y_dir - _robot->pose->y; 
+float x_g = x_dir - _robot->pose->x;
+float y_g = y_dir - _robot->pose->y; 
 
 //  P1->OUT &=~BIT5;
 //  P1->OUT |=BIT5;

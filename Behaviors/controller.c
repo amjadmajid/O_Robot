@@ -14,6 +14,7 @@
 #include "pwm.h"
 #include "goToGoal.h"
 #include "avoidObstacles.h"
+#include "blendedController.h"
 
 // the linear velocity amplified by 100 for integer math purpose 
 #define LINEAR_VELOCITY 35000
@@ -103,17 +104,30 @@ void controller()
   //    updating the IR distance measurements
   ir_distances(&(_robot->ir_distance->ir_left),&(_robot->ir_distance->ir_center),&(_robot->ir_distance->ir_right) );
 
+   UART0_OutUDec((uint32_t) _robot->ir_distance->ir_left);
+   UART0_OutChar(' ');
+   UART0_OutUDec((uint32_t) _robot->ir_distance->ir_right);
+   UART0_OutChar('\n'); UART0_OutChar('\r');
+
   // if ir distance is greater than 50 cm 
       // run avoid abstacles controller 
   // else 
       // run go to goal controller 
 
-  if ( _robot->ir_distance->ir_left > 500 && 
-       _robot->ir_distance->ir_center > 500 && 
-       _robot->ir_distance->ir_right > 500)
-  {
+  // if ( _robot->ir_distance->ir_left > 500 && 
+  //      _robot->ir_distance->ir_center > 500 && 
+  //      _robot->ir_distance->ir_right > 500)
+  // {
      go_to_goal_controller();
-  }else{
-    avoid_obstacle_controller();
-}
+     
+//   }
+//   else if ( _robot->ir_distance->ir_left > 300 && 
+//             _robot->ir_distance->ir_center > 300 && 
+//             _robot->ir_distance->ir_right > 300)
+//   {
+//     blended_controller();
+//   }
+//   else{
+//      avoid_obstacle_controller();
+// }
 }
