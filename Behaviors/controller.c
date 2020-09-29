@@ -114,19 +114,18 @@ void controller()
   // else 
       // run go to goal controller 
 
-  // if ( _robot->ir_distance->ir_left > 500 && 
-  //      _robot->ir_distance->ir_center > 500 && 
-  //      _robot->ir_distance->ir_right > 500)
-  // {
-     go_to_goal_controller();
-     
-//   }
-//   else if ( _robot->ir_distance->ir_left > 300 && 
-//             _robot->ir_distance->ir_center > 300 && 
-//             _robot->ir_distance->ir_right > 300)
-//   {
-//     blended_controller();
-//   }
+  if ( _robot->ir_distance->ir_left > 500 && 
+       _robot->ir_distance->ir_center > 500 && 
+       _robot->ir_distance->ir_right > 500)
+  {
+     go_to_goal_controller();     
+  }
+  else ( _robot->ir_distance->ir_left > 300 && 
+            _robot->ir_distance->ir_center > 300 && 
+            _robot->ir_distance->ir_right > 300)
+  {
+    blended_controller();
+  }
 //   else{
 //      avoid_obstacle_controller();
 // }
