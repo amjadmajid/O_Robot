@@ -37,78 +37,69 @@ uint32_t ir_right_oa[LEN_OA_DEBUG]={0};
 
 double static E_i=0;
 float static K_i = 3.6;
-float static K_p = 830;
+float static K_p = 430;
 
 
 
 void avoid_obstacle_controller()
 {
 
-//    if(cntr_oa_debug < LEN_OA_DEBUG){
-//        ir_left_oa[cntr_oa_debug] = _robot->ir_distance->ir_left;
-//        ir_right_oa[cntr_oa_debug]   = _robot->ir_distance->ir_right;
-//        cntr_oa_debug++;
-//    }
+    //    if(cntr_oa_debug < LEN_OA_DEBUG){
+    //        ir_left_oa[cntr_oa_debug] = _robot->ir_distance->ir_left;
+    //        ir_right_oa[cntr_oa_debug]   = _robot->ir_distance->ir_right;
+    //        cntr_oa_debug++;
+    //    }
 
 
-  // pi/4= 0.785
-vector_2d left_sensor_rf = convert2rf(50,70,  0.785, _robot->ir_distance->ir_left);
-vector_2d center_sensor_rf = convert2rf(50,-70, 0, _robot->ir_distance->ir_center);
-vector_2d right_sensor_rf = convert2rf(50,-70,-0.785, _robot->ir_distance->ir_right);
+      // pi/4= 0.785
+    vector_2d left_sensor_rf = convert2rf(50,70,  0.785, _robot->ir_distance->ir_left);
+    vector_2d center_sensor_rf = convert2rf(50,-70, 0, _robot->ir_distance->ir_center);
+    vector_2d right_sensor_rf = convert2rf(50,-70,-0.785, _robot->ir_distance->ir_right);
 
-vector_2d left_sensor_wf =  convert2wf(left_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
-vector_2d center_sensor_wf =  convert2wf(center_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
-vector_2d rihgt_sensor_wf =  convert2wf(right_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
+    vector_2d left_sensor_wf =  convert2wf(left_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
+    vector_2d center_sensor_wf =  convert2wf(center_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
+    vector_2d rihgt_sensor_wf =  convert2wf(right_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
 
-float x_dir = left_sensor_wf.x + rihgt_sensor_wf.x + center_sensor_wf.x;
-float y_dir = left_sensor_wf.y + rihgt_sensor_wf.y + center_sensor_wf.y;
+    float x_dir = left_sensor_wf.x + rihgt_sensor_wf.x + center_sensor_wf.x;
+    float y_dir = left_sensor_wf.y + rihgt_sensor_wf.y + center_sensor_wf.y;
 
-float x_g = x_dir - _robot->pose->x;
-float y_g = y_dir - _robot->pose->y; 
-
-//  P1->OUT &=~BIT5;
-//  P1->OUT |=BIT5;
-//  printf( "%d %d\n", (uint16_t)x_g, (uint16_t)y_g );
-//  P1->OUT |=BIT5;
-//  P1->OUT &=~BIT5;
-
-  float theta_g =   atan2f(y_g , x_g);
-
-//  P1->OUT &=~BIT5;
-//  P1->OUT |=BIT5;
-//  printf( "%d %d\n", (uint16_t)(theta_g * 100), (uint16_t)( _robot->pose->theta * 100) );
-//  P1->OUT |=BIT5;
-//  P1->OUT &=~BIT5;
+    float x_g = x_dir - _robot->pose->x;
+    float y_g = y_dir - _robot->pose->y;
 
 
-  float heading_error = theta_g - _robot->pose->theta;
-  float err = atan2f(sin(heading_error), cos(heading_error));
+    float theta_g =   atan2f(y_g , x_g);
 
-  E_i +=err;
-  float U_i =  (K_i * E_i);
-  float U_p =  (K_p * err);
-  float w = U_p + U_i;
+    UART0_OutUDec((uint32_t) (theta_g * 100)+10 );
+    UART0_OutChar('\n'); UART0_OutChar('\r');
 
-//  if(cntr_oa_debug < LEN_OA_DEBUG){
-//      theta_current[cntr_oa_debug] = _robot->pose->theta;
-//      theta_goal[cntr_oa_debug]   = theta_g;
-//      w_oa[cntr_oa_debug] = w;
-//      cntr_oa_debug++;
-//  }
+    float heading_error = theta_g - _robot->pose->theta;
+    float err = atan2f(sin(heading_error), cos(heading_error));
 
-  left_duty_cycle = (linear_velocity - w * 14)/7 ;
-  right_duty_cycle = (linear_velocity + w * 14)/7 ;
+    E_i +=err;
+    float U_i =  (K_i * E_i);
+    float U_p =  (K_p * err);
+    float w = U_p + U_i;
 
-//  if(cntr_oa_debug < LEN_OA_DEBUG){
-//      left_duty_cycle_oa[cntr_oa_debug] = left_duty_cycle;
-//      right_duty_cycle_oa[cntr_oa_debug]   = right_duty_cycle;
-//      cntr_oa_debug++;
-//  }
+    //  if(cntr_oa_debug < LEN_OA_DEBUG){
+    //      theta_current[cntr_oa_debug] = _robot->pose->theta;
+    //      theta_goal[cntr_oa_debug]   = theta_g;
+    //      w_oa[cntr_oa_debug] = w;
+    //      cntr_oa_debug++;
+    //  }
 
-  duty_check(&left_duty_cycle, &right_duty_cycle);
+    left_duty_cycle = (linear_velocity - w * 14)/7 ;
+    right_duty_cycle = (linear_velocity + w * 14)/7 ;
 
-  motor_forward(right_duty_cycle, left_duty_cycle);
-  robot_position_update(_robot);
+    //  if(cntr_oa_debug < LEN_OA_DEBUG){
+    //      left_duty_cycle_oa[cntr_oa_debug] = left_duty_cycle;
+    //      right_duty_cycle_oa[cntr_oa_debug]   = right_duty_cycle;
+    //      cntr_oa_debug++;
+    //  }
+
+    duty_check(&left_duty_cycle, &right_duty_cycle);
+
+    motor_forward(right_duty_cycle, left_duty_cycle);
+    robot_position_update(_robot);
 }
 
 

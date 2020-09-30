@@ -34,8 +34,8 @@ uint32_t ir_right_bc[LEN_BC_DEBUG]={0};
 
 
 double static E_i=0;
-float static K_i = 1.6;
-float static K_p = 230;
+float static K_i = 2.6;
+float static K_p = 330;
 
 
 
