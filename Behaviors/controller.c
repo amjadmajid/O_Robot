@@ -97,6 +97,7 @@ void controller_init(float x_g, float y_g, differential_robot_t * robot_pt, uint
     //   }
 }
 
+uint16_t controller_switch = 500;
 
 void controller()
 {
@@ -114,19 +115,22 @@ void controller()
   // else 
       // run go to goal controller 
 
-  if ( _robot->ir_distance->ir_left > 500 && 
-       _robot->ir_distance->ir_center > 500 && 
-       _robot->ir_distance->ir_right > 500)
+  if ( _robot->ir_distance->ir_left > controller_switch &&
+       _robot->ir_distance->ir_center > controller_switch &&
+       _robot->ir_distance->ir_right > controller_switch)
   {
+      controller_switch=500;
      go_to_goal_controller();     
   }
-  else ( _robot->ir_distance->ir_left > 300 && 
-            _robot->ir_distance->ir_center > 300 && 
-            _robot->ir_distance->ir_right > 300)
-  {
-    blended_controller();
-  }
-//   else{
-//      avoid_obstacle_controller();
-// }
+//     else
+//      ( _robot->ir_distance->ir_left > 300 &&
+//            _robot->ir_distance->ir_center > 300 &&
+//            _robot->ir_distance->ir_right > 300)
+//  {
+//    blended_controller();
+//  }
+   else{
+       controller_switch = 550;
+      avoid_obstacle_controller();
+ }
 }
