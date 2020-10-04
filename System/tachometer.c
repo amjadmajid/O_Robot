@@ -62,8 +62,8 @@ void PORT5_IRQHandler(void){
         P5->IFG &= ~BIT0;
         // execute user hook
         (*taskLeft)();
-        P5->OUT |=BIT4;
-        P5->OUT &=~BIT4;
+//        P5->OUT |=BIT4;
+//        P5->OUT &=~BIT4;
     }
 }
 
@@ -72,8 +72,8 @@ void PORT6_IRQHandler(void){
 	    P6->IFG &= ~BIT1;
 		// execute user hook
 		(*taskRight)();
-        P5->OUT |=BIT5;
-        P5->OUT &=~BIT5;
+//        P5->OUT |=BIT5;
+//        P5->OUT &=~BIT5;
 	}
 }
 

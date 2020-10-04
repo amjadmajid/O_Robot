@@ -15,7 +15,7 @@
 //uint8_t pauses[] =        {  1,      0,       1,            0,           0,         0     };
 
 #define PHATH_LEN 2
-float path[PHATH_LEN][2]= { {2,0}, {2,2} };
+float path[PHATH_LEN][2]= { {20,0}, {2,2} };
 uint8_t pauses[] =        {  0,      0   };
 
 
@@ -28,6 +28,8 @@ uint32_t location_cntr = 0;
 
 void main(void)
  {
+    P1->OUT &=~BIT5;
+    P1->DIR |=BIT5;
     // initialize the clock, buttons to go, and UART for debugging
     initialize();
     differential_robot_t* robot = robot_init();

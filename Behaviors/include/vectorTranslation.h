@@ -17,8 +17,8 @@ typedef struct
   float y;
 } vector_2d;
 
-vector_2d convert2rf(int32_t x_s, int32_t y_s, float theta, uint32_t ir_distance);
-vector_2d convert2wf(vector_2d robot_sensor, int32_t x_r, int32_t y_r, float theta);
+vector_2d convert2rf(float x_s, float y_s, float theta, uint32_t ir_distance);
+vector_2d convert2wf(vector_2d robot_sensor, float x_r, float y_r, float theta);
 
 
 

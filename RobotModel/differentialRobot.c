@@ -71,14 +71,14 @@ void robot_position_update(differential_robot_t * robot){
 	float y = robot->pose->y;
 	float theta = robot->pose->theta;
 
-	x += d_c * cos(theta);
-	y += d_c * sin(theta);
+	x += d_c * cosf(theta);
+	y += d_c * sinf(theta);
 	float delta_theta = (float)(d_r - d_l)/robot->base_len;
 	theta += delta_theta;
 
 	robot->pose->x = x;
 	robot->pose->y = y;
-	robot->pose->theta = atan2( sin(theta), cos(theta));
+	robot->pose->theta = atan2f( sinf(theta), cosf(theta));
 
 //	if(cntr_robot_pose_debug >=data_len_robot_pose_debug)
 //	{

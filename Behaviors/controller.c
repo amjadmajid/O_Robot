@@ -101,28 +101,32 @@ uint16_t controller_switch = 400;
 
 void controller()
 {
+    P1->OUT |=BIT5;
+    P1->OUT &=~BIT5;
 
   //    updating the IR distance measurements
   ir_distances(&(_robot->ir_distance->ir_left),&(_robot->ir_distance->ir_center),&(_robot->ir_distance->ir_right) );
 
 //   UART0_OutUDec((uint32_t) _robot->ir_distance->ir_left);
 //   UART0_OutChar(' ');
+//   UART0_OutUDec((uint32_t) _robot->ir_distance->ir_center);
+//   UART0_OutChar(' ');
 //   UART0_OutUDec((uint32_t) _robot->ir_distance->ir_right);
 //   UART0_OutChar('\n'); UART0_OutChar('\r');
 
   // if ir distance is greater than 50 cm 
-      // run avoid abstacles controller 
+      // run avoid obstacles controller
   // else 
       // run go to goal controller 
 
-  if ( _robot->ir_distance->ir_left > controller_switch &&
-       _robot->ir_distance->ir_center > controller_switch &&
-       _robot->ir_distance->ir_right > controller_switch)
-  {
-      controller_switch = 400;
-     go_to_goal_controller();     
-  }
-     else
+//  if ( _robot->ir_distance->ir_left > controller_switch &&
+//       _robot->ir_distance->ir_center > controller_switch &&
+//       _robot->ir_distance->ir_right > controller_switch)
+//  {
+//      controller_switch = 400;
+//     go_to_goal_controller();
+//  }
+//     else
 //      ( _robot->ir_distance->ir_left > 300 &&
 //            _robot->ir_distance->ir_center > 300 &&
 //            _robot->ir_distance->ir_right > 300)
@@ -131,8 +135,8 @@ void controller()
 //    blended_controller();
 //  }
 //   else
-         {
-         controller_switch = 500;
+//         {
+//         controller_switch = 500;
       avoid_obstacle_controller();
- }
+// }
 }

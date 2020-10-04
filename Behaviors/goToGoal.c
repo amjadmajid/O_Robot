@@ -41,7 +41,7 @@ void go_to_goal_controller(){
     theta_goal = atan2f(delta_y, delta_x);
 
     float heading_error = theta_goal - _robot->pose->theta;
-    float err = atan2f(sin(heading_error), cos(heading_error));
+    float err = atan2f(sinf(heading_error), cosf(heading_error));
 
     E_i +=err;
     float U_i =  (K_i * E_i);

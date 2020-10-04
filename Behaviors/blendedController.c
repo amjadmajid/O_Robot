@@ -51,7 +51,7 @@ void blended_controller()
 
 // pi/4= 0.785
 vector_2d left_sensor_rf = convert2rf(50,70,  0.785, _robot->ir_distance->ir_left);
-vector_2d center_sensor_rf = convert2rf(50,-70, 0, _robot->ir_distance->ir_center);
+vector_2d center_sensor_rf = convert2rf(70, 0, 0, _robot->ir_distance->ir_center);
 vector_2d right_sensor_rf = convert2rf(50,-70,-0.785, _robot->ir_distance->ir_right);
 
 vector_2d left_sensor_wf =  convert2wf(left_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
@@ -97,7 +97,7 @@ y_dir = alpha * y_g_n + (1-alpha) * y_o_n;
 
 
   float heading_error = theta_g - _robot->pose->theta;
-  float err = atan2f(sin(heading_error), cos(heading_error));
+  float err = atan2f(sinf(heading_error), cosf(heading_error));
 
   E_i +=err;
   float U_i =  (K_i * E_i);
