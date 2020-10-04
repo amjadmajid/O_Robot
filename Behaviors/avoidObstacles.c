@@ -18,6 +18,9 @@
 
 extern void duty_check(int32_t *left_duty_cycle, int32_t *right_duty_cycle );
 
+extern float _x_goal;
+extern float _y_goal;
+
 extern differential_robot_t * _robot;
 extern uint32_t  linear_velocity;
 extern int32_t   left_duty_cycle;
@@ -36,7 +39,7 @@ uint32_t ir_right_oa[LEN_OA_DEBUG]={0};
 
 
 double static E_i=0;
-float static K_i = 3.6;
+float static K_i = 8;
 float static K_p = 830;
 
 
@@ -67,21 +70,21 @@ void avoid_obstacle_controller()
     float y_g = y_dir - _robot->pose->y;
 
 
-    float theta_g =   atan2f(y_g , x_g);
+    float theta_g =   atan2(y_g , x_g);
 
-    UART0_OutUDec((uint32_t) (y_dir) );
-    UART0_OutChar(' ');
-    UART0_OutUDec((uint32_t) (x_dir) );
-    UART0_OutChar(' ');
-    UART0_OutUDec((uint32_t) (_robot->pose->y * 10) );
-    UART0_OutChar(' ');
-    UART0_OutUDec((uint32_t) (_robot->pose->x * 10) );
+//    UART0_OutUDec((uint32_t) (y_dir) );
+//    UART0_OutChar(' ');
+//    UART0_OutUDec((uint32_t) (x_dir) );
+//    UART0_OutChar(' ');
+//    UART0_OutUDec((uint32_t) (_robot->pose->y * 10) );
+//    UART0_OutChar(' ');
+//    UART0_OutUDec((uint32_t) (_robot->pose->x * 10) );
     UART0_OutChar(' ');
     UART0_OutUDec((uint32_t) (theta_g * 10) );
     UART0_OutChar('\n'); UART0_OutChar('\r');
 
     float heading_error = theta_g - _robot->pose->theta;
-    float err = atan2f(sinf(heading_error), cosf(heading_error));
+    float err = atan2(sin(heading_error), cos(heading_error));
 
     E_i +=err;
     float U_i =  (K_i * E_i);
@@ -108,6 +111,16 @@ void avoid_obstacle_controller()
 
     motor_forward(right_duty_cycle, left_duty_cycle);
     robot_position_update(_robot);
+
+
+    float x_err = fabs((_robot->pose->x - _x_goal));
+    float y_err = fabs((_robot->pose->y - _y_goal));
+
+    if ( x_err < .05 && y_err <.05 ){
+            motor_stop();
+            timerA1_stop();
+    }
+    
 }
 
 

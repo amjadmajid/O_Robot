@@ -35,8 +35,8 @@ vector_2d convert2rf(float x_s, float y_s, float theta, uint32_t ir_distance)
 //    sensor_vec.x = tmp + x_s;
 //    sensor_vec.y = y_s - tmp ;
 //  }else{
-    sensor_vec.x = cosf(theta) * ir_distance + x_s;
-    sensor_vec.y = sinf(theta) * ir_distance + y_s;
+    sensor_vec.x = cos(theta) * ir_distance + x_s;
+    sensor_vec.y = sin(theta) * ir_distance + y_s;
 //  }
 
   return sensor_vec;
@@ -47,8 +47,8 @@ vector_2d convert2wf(vector_2d robot_sensor, float x_r, float y_r, float theta){
 
   vector_2d robot_vec;
 
-  robot_vec.x = cosf(theta) * robot_sensor.x - sinf(theta) * robot_sensor.y + x_r;
-  robot_vec.y = sinf(theta) * robot_sensor.x + cosf(theta) * robot_sensor.y + y_r;
+  robot_vec.x = cos(theta) * robot_sensor.x - sin(theta) * robot_sensor.y + x_r;
+  robot_vec.y = sin(theta) * robot_sensor.x + cos(theta) * robot_sensor.y + y_r;
 
   return robot_vec;
 }

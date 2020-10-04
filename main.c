@@ -15,7 +15,7 @@
 //uint8_t pauses[] =        {  1,      0,       1,            0,           0,         0     };
 
 #define PHATH_LEN 2
-float path[PHATH_LEN][2]= { {20,0}, {2,2} };
+float path[PHATH_LEN][2]= { {2,0}, {2,2} };
 uint8_t pauses[] =        {  0,      0   };
 
 

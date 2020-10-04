@@ -87,7 +87,7 @@ y_dir = alpha * y_g_n + (1-alpha) * y_o_n;
 //  P1->OUT |=BIT5;
 //  P1->OUT &=~BIT5;
 
-  float theta_g =   atan2f(y_dir , x_dir);
+  float theta_g =   atan2(y_dir , x_dir);
 
 //  P1->OUT &=~BIT5;
 //  P1->OUT |=BIT5;
@@ -97,7 +97,7 @@ y_dir = alpha * y_g_n + (1-alpha) * y_o_n;
 
 
   float heading_error = theta_g - _robot->pose->theta;
-  float err = atan2f(sinf(heading_error), cosf(heading_error));
+  float err = atan2(sin(heading_error), cos(heading_error));
 
   E_i +=err;
   float U_i =  (K_i * E_i);
