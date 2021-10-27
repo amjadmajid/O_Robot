@@ -21,5 +21,4 @@ void endCritical(long);
 
 void waitForInterrupt(void);
 
-
 #endif /* SYSTEM_INCLUDE_INTERRUPTHANDLER_H_ */

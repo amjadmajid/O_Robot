@@ -7,7 +7,6 @@
 #ifndef SYSTEM_INCLUDE_TACHOMETER_H_
 #define SYSTEM_INCLUDE_TACHOMETER_H_
 
-void tachometer_init(void(*userTaskLeft)(void), void(*userTaskRight)(void) );
-
+void tachometer_init(void (*userTaskLeft)(void), void (*userTaskRight)(void));
 
 #endif /* SYSTEM_INCLUDE_TACHOMETER_H_ */

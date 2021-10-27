@@ -8,6 +8,7 @@
 #include "timer_A1.h"
 #include "interruptHandler.h"
 #include "controller.h"
+#include "UART1.h"
 
 #define CONTROL_PERIOD 5000
 //#define PHATH_LEN 6
@@ -15,28 +16,27 @@
 //uint8_t pauses[] =        {  1,      0,       1,            0,           0,         0     };
 
 #define PHATH_LEN 2
-float path[PHATH_LEN][2]= { {2,0}, {2,2} };
-uint8_t pauses[] =        {  0,      0   };
-
+float path[PHATH_LEN][2] = { { 2, 0 }, { 2, 2 } };
+uint8_t pauses[] = { 0, 0 };
 
 uint8_t goal_reached = 0;
 uint32_t pause_cntr = 0;
 
 uint32_t location_cntr = 0;
 
-
-
 void main(void)
- {
-    P1->OUT &=~BIT5;
-    P1->DIR |=BIT5;
+{
+    P1->OUT &= ~BIT5;
+    P1->DIR |= BIT5;
     // initialize the clock, buttons to go, and UART for debugging
     initialize();
-    differential_robot_t* robot = robot_init();
+    differential_robot_t *robot = robot_init();
 
-    controller_init(path[location_cntr][0] ,path[location_cntr][1] , robot,CONTROL_PERIOD, &goal_reached);
+    controller_init(path[location_cntr][0], path[location_cntr][1], robot, CONTROL_PERIOD, &goal_reached);
 
-    while(1) {
+
+    while (1)
+    {
         waitForInterrupt();
     }
 

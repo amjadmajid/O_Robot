@@ -11,5 +11,4 @@
 // initialize the clock, buttons to go, and UART for debugging
 void initialize();
 
-
 #endif /* SYSTEM_INCLUDE_INITIALIZATION_H_ */

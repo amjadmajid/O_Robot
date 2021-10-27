@@ -10,5 +10,4 @@
 
 void blended_controller();
 
-
 #endif /* BEHAVIORS_INCLUDE_BLENDEDCONTROLLER_H_ */

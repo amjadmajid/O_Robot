@@ -19,7 +19,7 @@ void motor_init(void);
  *@params: none
  *@return: none
  */
-void motor_stop (void);
+void motor_stop(void);
 
 /** ------------motor_forward------------
  *@brief : move the robot forward on a straight line or curve.
@@ -56,14 +56,4 @@ void motor_left(uint32_t leftDutyCycle, uint32_t rightDutyCycle);
 void motor_backward(uint32_t leftDutyCycle, uint32_t rightDutyCycle);
 
 #endif /* SYSTEM_INCLUDE_MOTOR_H_ */
-
-
-
-
-
-
-
-
-
-
 

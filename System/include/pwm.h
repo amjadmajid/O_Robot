@@ -14,7 +14,7 @@
  *@params: period specifies the PWM signal frequency.
  *         dutyCycle sets the PWM signal duty cycle.
  *@return: none
-*/
+ */
 void pwm_init(uint32_t period, uint32_t dutyCycle);
 
 /** ------------set_left_duty_cycle------------

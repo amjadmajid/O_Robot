@@ -17,24 +17,23 @@
 #include "UART0.h"
 #include "differentialRobot.h"
 
-extern void duty_check(int32_t *left_duty_cycle, int32_t *right_duty_cycle );
+extern void duty_check(int32_t *left_duty_cycle, int32_t *right_duty_cycle);
 
 extern float _x_goal;
 extern float _y_goal;
-extern uint8_t * _goal_flag;
-extern differential_robot_t * _robot;
-extern float     theta_goal;
-extern uint32_t  linear_velocity;
-extern int32_t   left_duty_cycle;
-extern int32_t   right_duty_cycle;
+extern uint8_t *_goal_flag;
+extern differential_robot_t *_robot;
+extern float theta_goal;
+extern uint32_t linear_velocity;
+extern int32_t left_duty_cycle;
+extern int32_t right_duty_cycle;
 
-
-float static E_i=0;
+float static E_i = 0;
 float static K_i = 2.2;
 float static K_p = 630;
 
-
-void go_to_goal_controller(){
+void go_to_goal_controller()
+{
 
     float delta_x = _x_goal - _robot->pose->x;
     float delta_y = _y_goal - _robot->pose->y;
@@ -43,9 +42,9 @@ void go_to_goal_controller(){
     float heading_error = theta_goal - _robot->pose->theta;
     float err = atan2(sin(heading_error), cos(heading_error));
 
-    E_i +=err;
-    float U_i =  (K_i * E_i);
-    float U_p =  (K_p * err);
+    E_i += err;
+    float U_i = (K_i * E_i);
+    float U_p = (K_p * err);
     float w = U_p + U_i;
 
 //--------------------------------Acceleration--------------------------------------
@@ -60,8 +59,8 @@ void go_to_goal_controller(){
 //  right_duty_cycle = (linear_velocity + w * L )/(meter_per_rev);
 //--------------------------------Acceleration--------------------------------------
 
-    left_duty_cycle = (linear_velocity - w * 14)/7 ;
-    right_duty_cycle = (linear_velocity + w * 14)/7 ;
+    left_duty_cycle = (linear_velocity - w * 14) / 7;
+    right_duty_cycle = (linear_velocity + w * 14) / 7;
 
 //    UART0_OutUDec((uint32_t) left_duty_cycle );
 //    UART0_OutChar(' ');
@@ -81,13 +80,11 @@ void go_to_goal_controller(){
 //    UART0_OutUDec((uint32_t) (y_err *100) );
 //    UART0_OutChar('\n'); UART0_OutChar('\r');
 
-
-    if ( x_err < .05 && y_err <.05 ){
-        * _goal_flag = 1; // goal is reached
-            motor_stop();
-            timerA1_stop();
+    if (x_err < .05 && y_err < .05)
+    {
+        *_goal_flag = 1; // goal is reached
+        motor_stop();
+        timerA1_stop();
     }
 }
-
-
 
