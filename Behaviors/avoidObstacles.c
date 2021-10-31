@@ -50,9 +50,9 @@ void avoid_obstacle_controller()
     //    }
 
     // pi/4= 0.785
-    vector_2d left_sensor_rf = convert2rf(50, 70, 0.785, _robot->ir_distance->ir_left);
+    vector_2d left_sensor_rf = convert2rf(50, 50, 0.785, _robot->ir_distance->ir_left);
     vector_2d center_sensor_rf = convert2rf(70, 0, 0, _robot->ir_distance->ir_center);
-    vector_2d right_sensor_rf = convert2rf(50, -70, -0.785, _robot->ir_distance->ir_right);
+    vector_2d right_sensor_rf = convert2rf(50, -50, -0.785, _robot->ir_distance->ir_right);
 
     vector_2d left_sensor_wf = convert2wf(left_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
     vector_2d center_sensor_wf = convert2wf(center_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
@@ -66,13 +66,13 @@ void avoid_obstacle_controller()
 
     float theta_g = atan2(y_g, x_g);
 
-//    UART0_OutUDec((uint32_t) (y_dir) );
-//    UART0_OutChar(' ');
-//    UART0_OutUDec((uint32_t) (x_dir) );
-//    UART0_OutChar(' ');
-//    UART0_OutUDec((uint32_t) (_robot->pose->y * 10) );
-//    UART0_OutChar(' ');
-//    UART0_OutUDec((uint32_t) (_robot->pose->x * 10) );
+//    UART1_OutUDec((uint32_t) (y_dir) );
+//    UART1_OutChar(' ');
+//    UART1_OutUDec((uint32_t) (x_dir) );
+//    UART1_OutChar(' ');
+//    UART1_OutUDec((uint32_t) (_robot->pose->y * 10) );
+//    UART1_OutChar(' ');
+//    UART1_OutUDec((uint32_t) (_robot->pose->x * 10) );
     UART1_OutChar(' ');
     UART1_OutUDec((uint32_t) (theta_g * 10));
     UART1_OutChar('\n');
