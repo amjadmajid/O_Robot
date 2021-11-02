@@ -8,10 +8,7 @@
 #include <stdio.h>
 #include "msp.h"
 #include "pwm.h"
-
-#define SLEEP P3->OUT
-#define POWER P2->OUT
-#define DIRECTION P1->OUT
+#include "motor.h"
 
 /**
  * Make the DC motors' direction, power, sleep pins output.
@@ -75,11 +72,11 @@ void motor_forward(int32_t leftDutyCycle, int32_t rightDutyCycle)
     {
         motor_backward((uint32_t) (leftDutyCycle * -1), (uint32_t) (rightDutyCycle * -1));
     }
-    else if (leftDuty < 0)
+    else if (leftDutyCycle < 0)
     {
         motor_left((uint32_t) (leftDutyCycle * -1), (uint32_t) rightDutyCycle);
     }
-    else if (rightDuty < 0)
+    else if (rightDutyCycle < 0)
     {
         motor_right((uint32_t) leftDutyCycle, (uint32_t) (rightDutyCycle * -1));
     }

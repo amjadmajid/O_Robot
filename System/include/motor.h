@@ -7,6 +7,10 @@
 #ifndef SYSTEM_INCLUDE_MOTOR_H_
 #define SYSTEM_INCLUDE_MOTOR_H_
 
+#define SLEEP P3->OUT
+#define POWER P2->OUT
+#define DIRECTION P1->OUT
+
 /** ------------motor_init------------
  *@brief : setup the connections between the MCU and the DC motors
  *@params: none

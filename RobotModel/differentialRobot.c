@@ -5,15 +5,8 @@
  */
 
 #include "differentialRobot.h"
-//#include "printf.h"
 #include <math.h>
-#define MAX_IR 800 // max ir distances in mm
-
-//uint16_t const  data_len_robot_pose_debug = 200;
-//uint16_t static cntr_robot_pose_debug=0;
-//uint32_t static robot_x[data_len_robot_pose_debug]={0};
-//uint32_t static robot_y[data_len_robot_pose_debug]={0};
-//uint32_t static robot_theta[data_len_robot_pose_debug]={0};
+#define MAX_IR 800 // maximum ir distances in mm
 
 // initialize the robot data structure
 tachometer_t right_tachometer = { 0, 0, 0 };
@@ -28,15 +21,15 @@ differential_robot_t robot;
 differential_robot_t* robot_init()
 {
     // initialize right wheel
-    right_wheel.radius = RADIUS;
-    right_wheel.ticks_per_rev = 0;
+    right_wheel.dis_per_tick_numerator = TICK_DIS_NUMERATOR;
+    right_wheel.dis_per_tick_denominator = TICK_DIS_DENOMINATOR;
     right_wheel.tachometer = &right_tachometer;
     // initialize left wheel
-    left_wheel.radius = RADIUS;
-    left_wheel.ticks_per_rev = 0;
+    left_wheel.dis_per_tick_numerator = TICK_DIS_NUMERATOR;
+    left_wheel.dis_per_tick_denominator = TICK_DIS_DENOMINATOR;
     left_wheel.tachometer = &left_tachometer;
 
-    robot.base_len = L;
+    robot.base_len = BASE_LENGTH;
     robot.right = &right_wheel;
     robot.left = &left_wheel;
     robot.pose = &pose;
@@ -50,20 +43,20 @@ float _robot_distance_update_mm(float d_r, float d_l)
     return (d_r + d_l) / 2;
 }
 
-void _wheel_distance_update_mm(tachometer_t *tachometer)
+void _wheel_distance_update_mm(wheel_t *wheel)
 {
     // calculate the distance traveled since the last update
-    int32_t ticks = tachometer->ticks;
-    float delta_ticks = ticks - tachometer->prev_ticks;
+    int32_t ticks = wheel->tachometer->ticks;
+    float delta_ticks = ticks - wheel->tachometer->prev_ticks;
     // update the previous tachometer ticks
-    tachometer->prev_ticks = ticks;
-    tachometer->delta_dis = (TICK_DIS_NUMERATOR * delta_ticks) / TICK_DIS_DENOMINATOR;  //distance in meter
+    wheel->tachometer->prev_ticks = ticks;
+    wheel->tachometer->delta_dis = (wheel->dis_per_tick_numerator * delta_ticks) / wheel->dis_per_tick_denominator;  //distance in meter
 }
 
 void robot_position_update(differential_robot_t *robot)
 {
-    _wheel_distance_update_mm(robot->right->tachometer);
-    _wheel_distance_update_mm(robot->left->tachometer);
+    _wheel_distance_update_mm(robot->right);
+    _wheel_distance_update_mm(robot->left);
 
     float d_r = robot->right->tachometer->delta_dis;
     float d_l = robot->left->tachometer->delta_dis;
@@ -81,15 +74,5 @@ void robot_position_update(differential_robot_t *robot)
     robot->pose->x = x;
     robot->pose->y = y;
     robot->pose->theta = atan2f(sinf(theta), cosf(theta));
-
-//	if(cntr_robot_pose_debug >=data_len_robot_pose_debug)
-//	{
-//		cntr_robot_pose_debug=0;
-//	}
-//	robot_x[cntr_robot_pose_debug] = x;
-//	robot_y[cntr_robot_pose_debug] = y;
-//	robot_theta[cntr_robot_pose_debug]= robot->pose->theta;
-//	cntr_robot_pose_debug++;
-
 }
 

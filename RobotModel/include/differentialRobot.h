@@ -9,12 +9,14 @@
 #ifndef DATASTRUCTURE_INCLUDE_ROBOT_H_
 #define DATASTRUCTURE_INCLUDE_ROBOT_H_
 
-#define RADIUS .035                    // wheel radius in meter
-#define TICKS_PER_REV 360              // ticks per wheel revolution
-#define L .14                          // distance between the two wheels in meter
-// #define dis_per_tick  .61 //(2 * _PI * R)/N [distance in meter]
-#define TICK_DIS_NUMERATOR 61          // to avoid float operation split the fraction 0.61
-#define TICK_DIS_DENOMINATOR 100000    // consequently you much multiply and then divide
+
+#define BASE_LENGTH .14                          // distance between the two wheels in meter
+// define the distance per tick as a numerator and denominator
+// wheel radius in meter is 0.035 meters
+// one revolution takes the wheel 360 ticks
+// 0.035 * 2 * pi / 360 = 0.00061
+#define TICK_DIS_NUMERATOR 61          // to avoid float operation split the fraction
+#define TICK_DIS_DENOMINATOR 100000    // consequently you must multiply and then divide
 
 typedef struct ir_distances
 {
@@ -40,8 +42,8 @@ typedef struct pose
 
 typedef struct wheel
 {
-    float radius;
-    uint32_t ticks_per_rev;
+    uint32_t dis_per_tick_numerator;
+    uint32_t dis_per_tick_denominator;
     tachometer_t *tachometer;
 } wheel_t;
 
