@@ -199,6 +199,5 @@ void UART1_OutUDec(uint32_t n)
 void UART1_FinishOutput(void)
 {
     // Wait for entire tx message to be sent
-    while ((EUSCI_A2->IFG & 0x02) == 0)
-        ;
+    while ((EUSCI_A2->IFG & 0x02) == 0);
 }

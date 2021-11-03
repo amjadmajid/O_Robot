@@ -22,11 +22,9 @@ void clock_init_48MHz(void)
     if (currentPowerState != PCM_CTL0_CPM_0)
         error();
 
-    while ((PCM->CTL1 & PCM_CTL1_PMR_BUSY))
-        ;
+    while ((PCM->CTL1 & PCM_CTL1_PMR_BUSY));
     PCM->CTL0 = PCM_CTL0_KEY_VAL | PCM_CTL0_AMR_1;
-    while ((PCM->CTL1 & PCM_CTL1_PMR_BUSY))
-        ;
+    while ((PCM->CTL1 & PCM_CTL1_PMR_BUSY));
     if (PCM->IFG & PCM_IFG_AM_INVALID_TR_IFG)
         error();                            // Error if transition was not successful
     if ((PCM->CTL0 & PCM_CTL0_CPM_MASK) != PCM_CTL0_CPM_1)
@@ -54,6 +52,17 @@ void clock_init_48MHz(void)
 //     P4->SEL1 &= ~(BIT3);
 }
 
+// ------------Clock_Delay1us------------
+// Simple delay function which delays about n microseconds.
+// Inputs: n, number of us to wait
+// Outputs: none
+void Clock_Delay1us(uint32_t n){
+  n = (382*n)/100; // 1 us, tuned at 48 MHz
+  while(n){
+    n--;
+  }
+}
+
 void error(void)
 {
     volatile uint32_t i;
@@ -61,8 +70,7 @@ void error(void)
     while (1)
     {
         P1->OUT ^= BIT0;
-        for (i = 20000; i > 0; i--)
-            ;           // Blink LED forever
+        for (i = 20000; i > 0; i--);           // Blink LED forever
     }
 }
 

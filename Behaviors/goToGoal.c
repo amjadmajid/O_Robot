@@ -80,6 +80,7 @@ void go_to_goal_controller()
 //    UART0_OutUDec((uint32_t) (y_err *100) );
 //    UART0_OutChar('\n'); UART0_OutChar('\r');
 
+//    if (x_err < .05 && y_err < .05)
     if (x_err < .05 && y_err < .05)
     {
         *_goal_flag = 1; // goal is reached

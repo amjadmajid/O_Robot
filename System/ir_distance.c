@@ -78,6 +78,7 @@ volatile uint32_t debug_reg = 0;
 volatile uint32_t adc14_mem_0 = 0;
 volatile uint32_t adc14_mem_1 = 0;
 volatile uint32_t adc14_mem_2 = 0;
+
 void read_adc_17_14_16()
 {
     while (ADC14->CTL0 & 0x00010000)

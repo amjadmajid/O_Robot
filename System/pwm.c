@@ -58,5 +58,5 @@ void set_left_duty_cycle(uint32_t dutyCycle)
 void set_right_duty_cycle(uint32_t dutyCycle)
 {
     if (dutyCycle >= PWM_SIGNAL_PERIOD) return; //invalid duty cycles
-            RIGHT_MOTOR_POWER = dutyCycle;
-        }
+    RIGHT_MOTOR_POWER = dutyCycle;
+}

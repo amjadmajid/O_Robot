@@ -10,6 +10,8 @@
 #include "controller.h"
 #include "UART1.h"
 
+#include "us_distance.h"
+
 #define CONTROL_PERIOD 5000
 //#define PHATH_LEN 6
 //float path[PHATH_LEN][2]= { {0.8,0}, {1.6,0}, {1.6, -0.8}, {1.6,-1.6},  {0,-1.6},  {0,0}  };
@@ -33,10 +35,12 @@ void main(void)
     differential_robot_t *robot = robot_init();
 
     controller_init(path[location_cntr][0], path[location_cntr][1], robot, CONTROL_PERIOD, &goal_reached);
-
+    //enableInterrupts();
+    //ultrasound_init();
 
     while (1)
     {
+        //us_distances(&(robot->us_distance->us_left), &(robot->us_distance->us_center), &(robot->us_distance->us_right));
         waitForInterrupt();
     }
 

@@ -8,10 +8,7 @@
 #include <stdio.h>
 #include "msp.h"
 #include "pwm.h"
-
-#define SLEEP P3->OUT
-#define POWER P2->OUT
-#define DIRECTION P1->OUT
+#include "motor.h"
 
 /**
  * Make the DC motors' direction, power, sleep pins output.

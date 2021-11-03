@@ -10,6 +10,7 @@
 #include "motor.h"
 #include "timer_A1.h"
 #include "ir_distance.h"
+#include "us_distance.h"
 #include "lpf.h"
 #include "UART1.h"
 //#include "printf.h"
@@ -28,13 +29,17 @@ extern int32_t right_duty_cycle;
 
 #define LEN_OA_DEBUG 300
 uint16_t cntr_oa_debug = 0;
-uint32_t ir_left_oa[LEN_OA_DEBUG] = { 0 };
-uint32_t ir_right_oa[LEN_OA_DEBUG] = { 0 };
+
+uint32_t sensor_left_oa[LEN_OA_DEBUG] = { 0 };
+uint32_t sensor_right_oa[LEN_OA_DEBUG] = { 0 };
 //int32_t left_duty_cycle_oa[LEN_OA_DEBUG] = {0};
 //int32_t right_duty_cycle_oa[LEN_OA_DEBUG]= {0};
 //float theta_current[LEN_OA_DEBUG];
 //float theta_goal[LEN_OA_DEBUG];
 //float w_oa[LEN_OA_DEBUG];
+vector_2d left_sensor_rf;
+vector_2d center_sensor_rf;
+vector_2d right_sensor_rf;
 
 double static E_i = 0;
 float static K_i = 8;
@@ -50,29 +55,29 @@ void avoid_obstacle_controller()
     //    }
 
     // pi/4= 0.785
-    vector_2d left_sensor_rf = convert2rf(50, 70, 0.785, _robot->ir_distance->ir_left);
-    vector_2d center_sensor_rf = convert2rf(70, 0, 0, _robot->ir_distance->ir_center);
-    vector_2d right_sensor_rf = convert2rf(50, -70, -0.785, _robot->ir_distance->ir_right);
+    left_sensor_rf = convert2rf(50, 50, 0.785, _robot->sensor_distance->sensor_left);
+    center_sensor_rf = convert2rf(70, 0, 0, _robot->sensor_distance->sensor_center);
+    right_sensor_rf = convert2rf(50, -50, -0.785, _robot->sensor_distance->sensor_right);
 
     vector_2d left_sensor_wf = convert2wf(left_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
     vector_2d center_sensor_wf = convert2wf(center_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
-    vector_2d rihgt_sensor_wf = convert2wf(right_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
+    vector_2d right_sensor_wf = convert2wf(right_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
 
-    float x_dir = left_sensor_wf.x + rihgt_sensor_wf.x + center_sensor_wf.x;
-    float y_dir = left_sensor_wf.y + rihgt_sensor_wf.y + center_sensor_wf.y;
+    float x_dir = left_sensor_wf.x + right_sensor_wf.x + center_sensor_wf.x;
+    float y_dir = left_sensor_wf.y + right_sensor_wf.y + center_sensor_wf.y;
 
     float x_g = x_dir - _robot->pose->x;
     float y_g = y_dir - _robot->pose->y;
 
     float theta_g = atan2(y_g, x_g);
 
-//    UART0_OutUDec((uint32_t) (y_dir) );
-//    UART0_OutChar(' ');
-//    UART0_OutUDec((uint32_t) (x_dir) );
-//    UART0_OutChar(' ');
-//    UART0_OutUDec((uint32_t) (_robot->pose->y * 10) );
-//    UART0_OutChar(' ');
-//    UART0_OutUDec((uint32_t) (_robot->pose->x * 10) );
+//    UART1_OutUDec((uint32_t) (y_dir) );
+//    UART1_OutChar(' ');
+//    UART1_OutUDec((uint32_t) (x_dir) );
+//    UART1_OutChar(' ');
+//    UART1_OutUDec((uint32_t) (_robot->pose->y * 10) );
+//    UART1_OutChar(' ');
+//    UART1_OutUDec((uint32_t) (_robot->pose->x * 10) );
     UART1_OutChar(' ');
     UART1_OutUDec((uint32_t) (theta_g * 10));
     UART1_OutChar('\n');

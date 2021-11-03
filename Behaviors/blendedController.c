@@ -23,8 +23,13 @@ extern int32_t right_duty_cycle;
 
 #define LEN_BC_DEBUG 300
 uint16_t cntr_bc_debug = 0;
-uint32_t ir_left_bc[LEN_BC_DEBUG] = { 0 };
-uint32_t ir_right_bc[LEN_BC_DEBUG] = { 0 };
+
+uint32_t sensor_left_bc[LEN_BC_DEBUG] = { 0 };
+uint32_t sensor_right_bc[LEN_BC_DEBUG] = { 0 };
+vector_2d left_sensor_rf;
+vector_2d center_sensor_rf;
+vector_2d right_sensor_rf;
+
 //int32_t left_duty_cycle_bc[LEN_BC_DEBUG] = {0};
 //int32_t right_duty_cycle_bc[LEN_BC_DEBUG]= {0};
 //float theta_current[LEN_BC_DEBUG];
@@ -45,16 +50,17 @@ void blended_controller()
 //    }
 
 // pi/4= 0.785
-    vector_2d left_sensor_rf = convert2rf(50, 70, 0.785, _robot->ir_distance->ir_left);
-    vector_2d center_sensor_rf = convert2rf(70, 0, 0, _robot->ir_distance->ir_center);
-    vector_2d right_sensor_rf = convert2rf(50, -70, -0.785, _robot->ir_distance->ir_right);
+
+    left_sensor_rf = convert2rf(50, 50, 0.785, _robot->sensor_distance->sensor_left);
+    center_sensor_rf = convert2rf(70, 0, 0, _robot->sensor_distance->sensor_center);
+    right_sensor_rf = convert2rf(50, -50, -0.785, _robot->sensor_distance->sensor_right);
 
     vector_2d left_sensor_wf = convert2wf(left_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
     vector_2d center_sensor_wf = convert2wf(center_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
-    vector_2d rihgt_sensor_wf = convert2wf(right_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
+    vector_2d right_sensor_wf = convert2wf(right_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
 
-    float x_dir = left_sensor_wf.x + rihgt_sensor_wf.x + center_sensor_wf.x;
-    float y_dir = left_sensor_wf.y + rihgt_sensor_wf.y + center_sensor_wf.y;
+    float x_dir = left_sensor_wf.x + right_sensor_wf.x + center_sensor_wf.x;
+    float y_dir = left_sensor_wf.y + right_sensor_wf.y + center_sensor_wf.y;
 
     float x_o = x_dir - _robot->pose->x;
     float y_o = y_dir - _robot->pose->y;

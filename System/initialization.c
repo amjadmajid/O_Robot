@@ -17,10 +17,8 @@ void press_buttons_to_go(void)
     P1->REN |= (BIT1 + BIT4 );
     P1->OUT |= (BIT1 + BIT4 ); // pull-up resistors
 
-    while (read_buttons() == 0x00)
-        ; // wait for press
-    while (read_buttons() != 0x00)
-        ; // wait for release
+    while (read_buttons() == 0x00); // wait for press
+    while (read_buttons() != 0x00); // wait for release
 }
 
 void initialize()

@@ -9,6 +9,7 @@
 #include "motor.h"
 #include "timer_A1.h"
 #include "ir_distance.h"
+#include "us_distance.h"
 #include "lpf.h"
 #include "UART1.h"
 #include "pwm.h"
@@ -29,6 +30,9 @@ uint32_t linear_velocity = LINEAR_VELOCITY;
 int32_t left_duty_cycle;
 int32_t right_duty_cycle;
 differential_robot_t *_robot;
+
+//select whether infrared (i) or ultrasound (u) sensors are used for the robot
+char sensor_type = 'u';
 
 void controller();
 
@@ -87,19 +91,20 @@ void controller_init(float x_g, float y_g, differential_robot_t *robot_pt, uint3
     enableInterrupts();
     timerA1_init(&controller, p);
 
-    adc_init_channel_17_14_16();
-
-    //initialize the ADC for the IR distance sensor
-    uint32_t *init_left = NULL;
-    uint32_t *init_center = NULL;
-    uint32_t *init_right = NULL;
-
-    read_adc_17_14_16(init_left, init_center, init_right);
-
-    //initialize the Low Pass Filters for the ir distance sensors
-    LPF_Init(*init_left, 32);     // P9.0/channel 17 
-    LPF_Init2(*init_center, 32);    // P6.1/channel 14
-    LPF_Init3(*init_right, 32);    // P9.1/channel 16
+    if(sensor_type == 'i'){
+        adc_init_channel_17_14_16();
+        //initialize the ADC for the ir distance sensor
+        uint32_t *init_left = NULL;
+        uint32_t *init_center = NULL;
+        uint32_t *init_right = NULL;
+        read_adc_17_14_16(init_left, init_center, init_right);
+        //initialize the Low Pass Filters for the ir distance sensors
+        LPF_Init(*init_left, 32);       // P9.0/channel 17
+        LPF_Init2(*init_center, 32);    // P6.1/channel 14
+        LPF_Init3(*init_right, 32);     // P9.1/channel 16
+    } else {
+        ultrasound_init();
+    }
 
     // initialize debug arrays
     //   uint16_t i;
@@ -116,34 +121,35 @@ void controller()
     P1->OUT |= BIT5;
     P1->OUT &= ~BIT5;
 
-    //    updating the IR distance measurements
-    ir_distances(&(_robot->ir_distance->ir_left), &(_robot->ir_distance->ir_center), &(_robot->ir_distance->ir_right));
-
-//   UART0_OutUDec((uint32_t) _robot->ir_distance->ir_left);
-//   UART0_OutChar(' ');
-//   UART0_OutUDec((uint32_t) _robot->ir_distance->ir_center);
-//   UART0_OutChar(' ');
-//   UART0_OutUDec((uint32_t) _robot->ir_distance->ir_right);
-//   UART0_OutChar('\n'); UART0_OutChar('\r');
-
-    // if ir distance is greater than 50 cm 
+    // updating the sensor distance measurements
+    // if sensor distance is greater than 50 cm
     // run avoid obstacles controller
     // else 
     // run go to goal controller 
-
-    if (_robot->ir_distance->ir_left > controller_switch && _robot->ir_distance->ir_center > controller_switch && _robot->ir_distance->ir_right > controller_switch)
+    if(sensor_type == 'i'){
+        ir_distances(&(_robot->sensor_distance->sensor_left), &(_robot->sensor_distance->sensor_center), &(_robot->sensor_distance->sensor_right));
+    } else {
+        us_distances(&(_robot->sensor_distance->sensor_left), &(_robot->sensor_distance->sensor_center), &(_robot->sensor_distance->sensor_right));
+    }
+    //   UART0_OutUDec((uint32_t) _robot->sensor_distance->sensor_left);
+    //   UART0_OutChar(' ');
+    //   UART0_OutUDec((uint32_t) _robot->sensor_distance->sensor_center);
+    //   UART0_OutChar(' ');
+    //   UART0_OutUDec((uint32_t) _robot->sensor_distance->sensor_right);
+    //   UART0_OutChar('\n'); UART0_OutChar('\r');
+    if (_robot->sensor_distance->sensor_left > controller_switch && _robot->sensor_distance->sensor_center > controller_switch && _robot->sensor_distance->sensor_right > controller_switch)
     {
         controller_switch = 500;
         go_to_goal_controller();
     }
-//     else
-//      ( _robot->ir_distance->ir_left > 300 &&
-//            _robot->ir_distance->ir_center > 300 &&
-//            _robot->ir_distance->ir_right > 300)
-//  {
-//    controller_switch = 500;
-//    blended_controller();
-//  }
+    //     else
+    //      ( _robot->sensor_distance->sensor_left > 300 &&
+    //            _robot->sensor_distance->sensor_center > 300 &&
+    //            _robot->sensor_distance->sensor_right > 300)
+    //  {
+    //    controller_switch = 500;
+    //    blended_controller();
+    //  }
     else
     {
         controller_switch = 600;
