@@ -122,4 +122,3 @@ void avoid_obstacle_controller()
     }
 
 }
-

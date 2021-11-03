@@ -65,26 +65,26 @@ void motor_backward(uint32_t leftDutyCycle, uint32_t rightDutyCycle)
     POWER |= (BIT6 | BIT7 );
 }
 
-void motor_forward(int32_t leftDuty, int32_t rightDuty)
+void motor_forward(int32_t leftDutyCycle, int32_t rightDutyCycle)
 {
 
-    if (leftDuty < 0 && rightDuty < 0)
+    if (leftDutyCycle < 0 && rightDutyCycle < 0)
     {
-        motor_backward((uint32_t) (leftDuty * -1), (uint32_t) (rightDuty * -1));
+        motor_backward((uint32_t) (leftDutyCycle * -1), (uint32_t) (rightDutyCycle * -1));
     }
-    else if (leftDuty < 0)
+    else if (leftDutyCycle < 0)
     {
-        motor_left((uint32_t) (leftDuty * -1), (uint32_t) rightDuty);
+        motor_left((uint32_t) (leftDutyCycle * -1), (uint32_t) rightDutyCycle);
     }
-    else if (rightDuty < 0)
+    else if (rightDutyCycle < 0)
     {
-        motor_right((uint32_t) leftDuty, (uint32_t) (rightDuty * -1));
+        motor_right((uint32_t) leftDutyCycle, (uint32_t) (rightDutyCycle * -1));
     }
     else
     {
         // Go forward
-        set_left_duty_cycle(leftDuty);
-        set_right_duty_cycle(rightDuty);
+        set_left_duty_cycle(leftDutyCycle);
+        set_right_duty_cycle(rightDutyCycle);
 
         P1->OUT &= ~(BIT6 | BIT7 );
 

@@ -48,6 +48,8 @@ uint32_t right_convert(uint32_t nr)
     return d;
 }
 
+// Initialize the channels 17, 14 and 16 for analog to digital conversion
+// These channels represent the left, middle and right infrared sensors respectively
 void adc_init_channel_17_14_16(void)
 {
     ADC14->CTL0 &= ~ADC14_CTL0_ENC;        // to allow programming

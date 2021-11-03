@@ -12,9 +12,15 @@
 void (*taskLeft)(void);
 void (*taskRight)(void);
 
+
+/** ------------tachometer_init------------
+ * Setup the connections between the MCU and the tachometers using interrupts.
+ * Inputs: userTaskLeft is the task to perform when the left tachometer gives an interrupt.
+           userTaksRight is the task to perform when the right tachometer gives an interrupt.
+ * Outputs: none
+ */
 void tachometer_init(void (*userTaskLeft)(void), void (*userTaskRight)(void))
 {
-
     //setup the hooks for the tachometers ISRs
     taskLeft = userTaskLeft;
     taskRight = userTaskRight;
@@ -53,4 +59,3 @@ void PORT5_IRQHandler(void)
         (*taskLeft)();
     }
 }
-

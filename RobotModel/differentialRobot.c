@@ -5,15 +5,9 @@
  */
 
 #include "differentialRobot.h"
-//#include "printf.h"
 #include <math.h>
 #define MAX_SENSOR 800 // max sensor distances in mm
 
-//uint16_t const  data_len_robot_pose_debug = 200;
-//uint16_t static cntr_robot_pose_debug=0;
-//uint32_t static robot_x[data_len_robot_pose_debug]={0};
-//uint32_t static robot_y[data_len_robot_pose_debug]={0};
-//uint32_t static robot_theta[data_len_robot_pose_debug]={0};
 
 // initialize the robot data structure
 tachometer_t right_tachometer = { 0, 0, 0 };
@@ -81,15 +75,4 @@ void robot_position_update(differential_robot_t *robot)
     robot->pose->x = x;
     robot->pose->y = y;
     robot->pose->theta = atan2f(sinf(theta), cosf(theta));
-
-//	if(cntr_robot_pose_debug >=data_len_robot_pose_debug)
-//	{
-//		cntr_robot_pose_debug=0;
-//	}
-//	robot_x[cntr_robot_pose_debug] = x;
-//	robot_y[cntr_robot_pose_debug] = y;
-//	robot_theta[cntr_robot_pose_debug]= robot->pose->theta;
-//	cntr_robot_pose_debug++;
-
 }
-
