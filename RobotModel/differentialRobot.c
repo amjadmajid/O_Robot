@@ -5,15 +5,14 @@
  */
 
 #include "differentialRobot.h"
+#include "ir_distance.h"
 #include <math.h>
-#define MAX_SENSOR 800 // max sensor distances in mm
-
 
 // initialize the robot data structure
 tachometer_t right_tachometer = { 0, 0, 0 };
 tachometer_t left_tachometer = { 0, 0, 0 };
-pose_t pose = { 0, 0, 0 };  // initial position of the robot
-sensor_distance_t sensor_distance = { MAX_SENSOR, MAX_SENSOR, MAX_SENSOR }; //distances from sensors to obstacles
+pose_t pose = { 0, 0, 0 };                      // initial position of the robot
+sensor_distances_t sensor_distance = { IR_MAX_DISTANCE, IR_MAX_DISTANCE, IR_MAX_DISTANCE };
 
 wheel_t right_wheel;
 wheel_t left_wheel;

@@ -9,6 +9,10 @@
 #ifndef SYSTEM_INCLUDE_PWM_H_
 #define SYSTEM_INCLUDE_PWM_H_
 
+#define LEFT_MOTOR_POWER        TIMER_A0->CCR[3]
+#define RIGHT_MOTOR_POWER       TIMER_A0->CCR[4]
+#define PWM_SIGNAL_PERIOD       TIMER_A0->CCR[0]
+
 /** ------------pwm_init------------
  * Sets up the pulse width modulation timer
  * Inputs: period is the period of the wave

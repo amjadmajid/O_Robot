@@ -41,8 +41,8 @@ void timerA1_init(void (*task)(void), uint16_t period)
 
 /** --------------timerA1_stop---------------
  * Deactivate the interrupt running a user task periodically.
- * Input: none
- * Output: none
+ * Inputs: none
+ * Outputs: none
  */
 void timerA1_stop(void)
 {
@@ -50,6 +50,11 @@ void timerA1_stop(void)
     NVIC->ICER[0] = 0x00000400; 	// disable TimerA1 interrupt 
 }
 
+/** ------------TA1_0_IRQHandler------------
+ * Is a pre-specified function name used to handle interrupts, after configuring calls timerA1_task for the interupt.
+ * Inputs: none
+ * Outputs: none
+ */
 void TA1_0_IRQHandler(void)
 {
     TIMER_A1->CCTL[0] &= ~0x0001; // clear the interrupt flag

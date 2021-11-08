@@ -10,8 +10,8 @@
 #define DATASTRUCTURE_INCLUDE_ROBOT_H_
 
 
-#define BASE_LENGTH .14                          // distance between the two wheels in meter
-// define the distance per tick as a numerator and denominator
+#define BASE_LENGTH .14                // distance between the two wheels in meter
+// define the distance per tick of the stepper motor as a numerator and denominator
 // wheel radius in meter is 0.035 meters
 // one revolution takes the wheel 360 ticks
 // 0.035 * 2 * pi / 360 = 0.00061

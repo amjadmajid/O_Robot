@@ -78,10 +78,10 @@ void avoid_obstacle_controller()
 //    UART1_OutUDec((uint32_t) (_robot->pose->y * 10) );
 //    UART1_OutChar(' ');
 //    UART1_OutUDec((uint32_t) (_robot->pose->x * 10) );
-    UART1_OutChar(' ');
-    UART1_OutUDec((uint32_t) (theta_g * 10));
-    UART1_OutChar('\n');
-    UART1_OutChar('\r');
+//    UART1_OutChar(' ');
+//    UART1_OutUDec((uint32_t) (theta_g * 10));
+//    UART1_OutChar('\n');
+//    UART1_OutChar('\r');
 
     float heading_error = theta_g - _robot->pose->theta;
     float err = atan2(sin(heading_error), cos(heading_error));

@@ -31,4 +31,5 @@ void initialize()
     UART1_Init();
     press_buttons_to_go();
     enableInterrupts();
+    UART1_OutString("START");
 }
