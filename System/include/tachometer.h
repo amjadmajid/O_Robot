@@ -7,6 +7,7 @@
 #ifndef SYSTEM_INCLUDE_TACHOMETER_H_
 #define SYSTEM_INCLUDE_TACHOMETER_H_
 
+<<<<<<< HEAD
 /**
  * \brief specifies the direction of the motor rotation, relative to the front of the robot
  */
@@ -39,6 +40,16 @@ void tachometer_init(void(*userTaskLeft)(uint16_t time), void(*userTaskRight)(ui
  * @note Assumes Tachometer_Init() has been called<br>
  * @note Assumes Clock_Init48MHz() has been called
  * @brief Get the most recent tachometer measurement
+=======
+#define TACHOLEFT BIT5
+#define TACHORIGHT BIT4
+
+/** ------------tachometer_init------------
+ * Setup the connections between the MCU and the tachometers using interrupts.
+ * Inputs: userTaskLeft is the task to perform when the left tachometer gives an interrupt.
+           userTaksRight is the task to perform when the right tachometer gives an interrupt.
+ * Outputs: none
+>>>>>>> 5a779fb5740b61a557ac1c5c4d18598159fae689
  */
 void Tachometer_Get(uint16_t *leftTach, enum TachDirection *leftDir, int32_t *leftSteps,
                     uint16_t *rightTach, enum TachDirection *rightDir, int32_t *rightSteps);

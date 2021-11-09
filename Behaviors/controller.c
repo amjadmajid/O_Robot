@@ -97,9 +97,9 @@ void controller_init(float x_g, float y_g, differential_robot_t *robot_pt, uint3
     _robot = robot_pt;
 
     motor_init();
+    enableInterrupts();
     tachometer_init(&leftTachometer, &rightTachometer);
     pwm_init(15000, 0);
-    enableInterrupts();
     timerA1_init(&controller, p);
 
     if(sensor_type == 'i'){
@@ -108,7 +108,7 @@ void controller_init(float x_g, float y_g, differential_robot_t *robot_pt, uint3
         uint32_t *init_left = NULL;
         uint32_t *init_center = NULL;
         uint32_t *init_right = NULL;
-        read_adc_17_14_16(init_left, init_center, init_right);
+        ir_distances(init_left, init_center, init_right);
         //initialize the Low Pass Filters for the ir distance sensors
         LPF_Init(*init_left, 32);       // P9.0/channel 17
         LPF_Init2(*init_center, 32);    // P6.1/channel 14
@@ -116,13 +116,6 @@ void controller_init(float x_g, float y_g, differential_robot_t *robot_pt, uint3
     } else {
         ultrasound_init();
     }
-
-    // initialize debug arrays
-    //   uint16_t i;
-    //   for(i = 0; i < LEN_OA_DEBUG; i++){
-    //       theta_current[i]=0;
-    //       theta_goal[i]=0;
-    //   }
 }
 
 uint16_t controller_switch = 500;
@@ -167,4 +160,12 @@ void controller()
         controller_switch = 600;
         avoid_obstacle_controller();
     }
+
+    UART1_OutUDec((uint32_t) _robot->pose->x);
+    UART1_OutChar(' ');
+    UART1_OutUDec((uint32_t) _robot->pose->y);
+    UART1_OutChar(' ');
+    UART1_OutUDec((uint32_t) _robot->pose->theta);
+    UART1_OutChar('\n');
+    UART1_OutChar('\r');
 }

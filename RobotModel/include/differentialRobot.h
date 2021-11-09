@@ -26,7 +26,7 @@ typedef struct sensor_distances
     uint32_t sensor_center;
     uint32_t sensor_right;
 
-} sensor_distance_t;
+} sensor_distances_t;
 
 
 typedef struct tachometer

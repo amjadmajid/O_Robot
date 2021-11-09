@@ -6,10 +6,7 @@
 
 #include <stdint.h>
 #include "msp.h"
-
-#define LEFT_MOTOR_POWER      	TIMER_A0->CCR[3]
-#define RIGHT_MOTOR_POWER     	TIMER_A0->CCR[4]
-#define PWM_SIGNAL_PERIOD  		TIMER_A0->CCR[0]
+#include "pwm.h"
 
 /** ------------pwm_init------------
  * Assuming the MCLK=48MHz which causes SMCLK=12MHz

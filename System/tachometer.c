@@ -126,6 +126,15 @@ void tachometer_init(void(*userTaskLeft)(uint16_t time), void(*userTaskRight)(ui
         // bit0=0,           clear interrupt pending
       TIMER_A3->CTL |= 0x0024;        // reset and start Timer A3 in continuous up mode
 
+    TIMER_A3->EX0 = 0x0005;       // divide the clock by 6
+
+
+    NVIC->IP[3] &= (NVIC->IP[3] & ~BIT(22) & ~BIT(23) & ~BIT(30) & ~BIT(31)) | BIT(21) | BIT(29);
+    NVIC->ISER[0] |= (TA3_0_IRQn | TA3_N_IRQn);
+
+    TIMER_A3->CTL = (TASSEL_2 + ID_3 + MC_1 + TAIE);
+//    TIMER_A3->CTL |= 0x0014;      // reset and start Timer A3 in up mode
+    endCritical(sr);
 }
 
 void TA3_0_IRQHandler(void){
