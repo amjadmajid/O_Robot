@@ -31,37 +31,48 @@ int32_t left_duty_cycle;
 int32_t right_duty_cycle;
 differential_robot_t *_robot;
 
+uint16_t Tachometer_FirstRightTime, Tachometer_SecondRightTime;
+uint16_t Tachometer_FirstLeftTime, Tachometer_SecondLeftTime;
+int Tachometer_RightSteps = 0;     // incremented with every step forward; decremented with every step backward
+int Tachometer_LeftSteps = 0;      // incremented with every step forward; decremented with every step backward
+enum TachDirection Tachometer_RightDir = STOPPED;
+enum TachDirection Tachometer_LeftDir = STOPPED;
+
 //select whether infrared (i) or ultrasound (u) sensors are used for the robot
 char sensor_type = 'u';
 
 void controller();
 
-void leftTachometer(void)
-{
-    int32_t tks = _robot->left->tachometer->ticks;
-    if (left_duty_cycle >= 0)
-    {
-        tks++;
-    }
-    else
-    {
-        tks--;
-    }
-    _robot->left->tachometer->ticks = tks;
+void leftTachometer(uint16_t currenttime){
+  Tachometer_FirstLeftTime = Tachometer_SecondLeftTime;
+  Tachometer_SecondLeftTime = currenttime;
+//  _robot->left->tachometer->prev_ticks = Tachometer_LeftSteps;
+  if(left_duty_cycle < 0){
+    // Encoder B is low, so this is a step backward
+    Tachometer_LeftSteps = Tachometer_LeftSteps - 1;
+    Tachometer_LeftDir = REVERSE;
+  }else{
+    // Encoder B is high, so this is a step forward
+    Tachometer_LeftSteps = Tachometer_LeftSteps + 1;
+    Tachometer_LeftDir = FORWARD;
+  }
+  _robot->left->tachometer->ticks = Tachometer_LeftSteps;
 }
 
-void rightTachometer(void)
-{
-    int32_t tks = _robot->right->tachometer->ticks;
-    if (right_duty_cycle >= 0)
-    {
-        tks++;
-    }
-    else
-    {
-        tks--;
-    }
-    _robot->right->tachometer->ticks = tks;
+void rightTachometer(uint16_t currenttime){
+  Tachometer_FirstRightTime = Tachometer_SecondRightTime;
+  Tachometer_SecondRightTime = currenttime;
+//  _robot->right->tachometer->prev_ticks = Tachometer_RightSteps;
+  if(right_duty_cycle < 0){
+    // Encoder B is low, so this is a step backward
+    Tachometer_RightSteps = Tachometer_RightSteps - 1;
+    Tachometer_RightDir = REVERSE;
+  }else{
+    // Encoder B is high, so this is a step forward
+    Tachometer_RightSteps = Tachometer_RightSteps + 1;
+    Tachometer_RightDir = FORWARD;
+  }
+  _robot->right->tachometer->ticks = Tachometer_RightSteps;
 }
 
 void duty_check(int32_t *left_duty_cycle, int32_t *right_duty_cycle)
@@ -131,12 +142,13 @@ void controller()
     } else {
         us_distances(&(_robot->sensor_distance->sensor_left), &(_robot->sensor_distance->sensor_center), &(_robot->sensor_distance->sensor_right));
     }
-    //   UART0_OutUDec((uint32_t) _robot->sensor_distance->sensor_left);
-    //   UART0_OutChar(' ');
-    //   UART0_OutUDec((uint32_t) _robot->sensor_distance->sensor_center);
-    //   UART0_OutChar(' ');
-    //   UART0_OutUDec((uint32_t) _robot->sensor_distance->sensor_right);
-    //   UART0_OutChar('\n'); UART0_OutChar('\r');
+    //   UART1_OutUDec((uint32_t) _robot->sensor_distance->sensor_left);
+    //   UART1_OutChar(' ');
+    //   UART1_OutUDec((uint32_t) _robot->sensor_distance->sensor_center);
+    //   UART1_OutChar(' ');
+    //   UART1_OutUDec((uint32_t) _robot->sensor_distance->sensor_right);
+    //   UART1_OutChar('\n');
+    //   UART1_OutChar('\r');
     if (_robot->sensor_distance->sensor_left > controller_switch && _robot->sensor_distance->sensor_center > controller_switch && _robot->sensor_distance->sensor_right > controller_switch)
     {
         controller_switch = 500;

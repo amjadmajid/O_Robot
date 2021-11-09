@@ -8,8 +8,7 @@
 #include "timer_A1.h"
 #include "interruptHandler.h"
 #include "controller.h"
-#include "UART1.h"
-
+//#include "UART1.h"
 #include "us_distance.h"
 
 #define CONTROL_PERIOD 5000
@@ -18,7 +17,8 @@
 //uint8_t pauses[] =        {  1,      0,       1,            0,           0,         0     };
 
 #define PHATH_LEN 2
-float path[PHATH_LEN][2] = { { 2, 0 }, { 2, 2 } };
+char temp;
+float path[PHATH_LEN][2] = { { 10, 10 }, { 2, 2 } };
 uint8_t pauses[] = { 0, 0 };
 
 uint8_t goal_reached = 0;
@@ -33,13 +33,15 @@ void main(void)
     // initialize the clock, buttons to go, and UART for debugging
     initialize();
     differential_robot_t *robot = robot_init();
-
     controller_init(path[location_cntr][0], path[location_cntr][1], robot, CONTROL_PERIOD, &goal_reached);
     //enableInterrupts();
     //ultrasound_init();
 
     while (1)
     {
+//        temp = UART1_InChar();
+//        UART1_OutChar('g');
+//        UART1_OutChar(temp);
         //us_distances(&(robot->us_distance->us_left), &(robot->us_distance->us_center), &(robot->us_distance->us_right));
         waitForInterrupt();
     }
@@ -50,6 +52,9 @@ void main(void)
     avoid_obstacle_init(robot, CONTROL_PERIOD);
 
     while(1) {
+//        temp = UART1_InChar();
+//        UART1_OutChar('g');
+//        UART1_OutChar(temp);
         waitForInterrupt();
     }
 

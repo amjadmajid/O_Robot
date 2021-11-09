@@ -65,7 +65,7 @@ uint32_t SetDistanceLeft(int timeOut){
     //it is used to exit the while loop if the signal is not found
 
     //Trigger Left connect to P6.0
-    //Echo Left connect to P3.6
+    //Echo Left connect to P2.5
 
     uint32_t time;
     uint8_t echoValue;
@@ -83,25 +83,25 @@ uint32_t SetDistanceLeft(int timeOut){
 
     time = 0;
     //Store the value of the echo sensor ANDing the pin vector with the bit that the echo sensor is connected to
-    echoValue = (P3->IN & 0x40);
+    echoValue = (P2->IN & 0x20);
 
     //wait for triggers signal to be received by the echo sensor
     while( echoValue == 0x00 && time < timeOut){
         //Delay for one microsecond so we can keep track of how much time it took to receive signal
         Clock_Delay1us(1);
         time++;
-        echoValue = (P3->IN & 0x40);
+        echoValue = (P2->IN & 0x20);
     }
 
     time = 0;
-    echoValue = (P3->IN & 0x40);
+    echoValue = (P2->IN & 0x20);
 
     //wait for echo signal to return to LOW
     while( echoValue != 0x00 && time < timeOut  ){
         //Delay for 1 microsecond and increment time variable so the time variable will store how much time it took for the echo signal to return to 0
         Clock_Delay1us(1);
         time++;
-        echoValue = (P3->IN & 0x40);
+        echoValue = (P2->IN & 0x20);
     }
 
     //Rate of sound in air is approximately 0.343 milimeters per microsecond
@@ -179,11 +179,11 @@ void ultrasound_init(void)
     //Trigger as Output
     P6->DIR |= 0x01;
 
-    //EchoBitL as GPIO P3.6
-    P3->SEL0 &= ~0x40;
-    P3->SEL1 &= ~0x40;
+    //EchoBitL as GPIO P2.5
+    P2->SEL0 &= ~0x20;
+    P2->SEL1 &= ~0x20;
     //Echo as input
-    P3->DIR &= ~0x40;
+    P2->DIR &= ~0x20;
 
     //TriggerR as GPIO P4.1
     P4->SEL0 &= ~0x02;

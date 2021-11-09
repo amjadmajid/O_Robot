@@ -10,6 +10,8 @@
 #define DATASTRUCTURE_INCLUDE_ROBOT_H_
 
 
+#define RADIUS .035                    // wheel radius in meter
+#define TICKS_PER_REV 360              // ticks per wheel revolution
 #define BASE_LENGTH .14                          // distance between the two wheels in meter
 // define the distance per tick as a numerator and denominator
 // wheel radius in meter is 0.035 meters
@@ -43,8 +45,8 @@ typedef struct pose
 
 typedef struct wheel
 {
-    uint32_t dis_per_tick_numerator;
-    uint32_t dis_per_tick_denominator;
+    float radius;
+    uint32_t ticks_per_rev;
     tachometer_t *tachometer;
 } wheel_t;
 

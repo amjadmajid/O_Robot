@@ -14,7 +14,7 @@
 #include "motor.h"
 #include "lpf.h"
 #include "pwm.h"
-#include "UART0.h"
+#include "UART1.h"
 #include "differentialRobot.h"
 
 extern void duty_check(int32_t *left_duty_cycle, int32_t *right_duty_cycle);
@@ -39,6 +39,14 @@ void go_to_goal_controller()
     float delta_y = _y_goal - _robot->pose->y;
     theta_goal = atan2(delta_y, delta_x);
 
+//    UART1_OutChar('G');
+//    UART1_OutChar(' ');
+//    UART1_OutUDec((uint32_t) (_robot->pose->y * 1000) );
+//    UART1_OutChar(' ');
+//    UART1_OutUDec((uint32_t) (_robot->pose->x * 1000) );
+//    UART1_OutChar('\n');
+//    UART1_OutChar('\r');
+
     float heading_error = theta_goal - _robot->pose->theta;
     float err = atan2(sin(heading_error), cos(heading_error));
 
@@ -62,10 +70,11 @@ void go_to_goal_controller()
     left_duty_cycle = (linear_velocity - w * 14) / 7;
     right_duty_cycle = (linear_velocity + w * 14) / 7;
 
-//    UART0_OutUDec((uint32_t) left_duty_cycle );
-//    UART0_OutChar(' ');
-//    UART0_OutUDec((uint32_t) right_duty_cycle );
-//    UART0_OutChar('\n'); UART0_OutChar('\r');
+//    UART1_OutUDec((uint32_t) left_duty_cycle );
+//    UART1_OutChar(' ');
+//    UART1_OutUDec((uint32_t) right_duty_cycle );
+//    UART1_OutChar('\n');
+//    UART1_OutChar('\r');
 
     duty_check(&left_duty_cycle, &right_duty_cycle);
 
@@ -75,13 +84,14 @@ void go_to_goal_controller()
     float x_err = fabs((_robot->pose->x - _x_goal));
     float y_err = fabs((_robot->pose->y - _y_goal));
 
-//    UART0_OutUDec((uint32_t) (x_err  * 100) );
-//    UART0_OutChar(' ');
-//    UART0_OutUDec((uint32_t) (y_err *100) );
-//    UART0_OutChar('\n'); UART0_OutChar('\r');
+//    UART1_OutUDec((uint32_t) (x_err  * 100) );
+//    UART1_OutChar(' ');
+//    UART1_OutUDec((uint32_t) (y_err *100) );
+//    UART1_OutChar('\n');
+//    UART1_OutChar('\r');
 
 //    if (x_err < .05 && y_err < .05)
-    if (x_err < .05 && y_err < .05)
+    if (x_err < 5 && y_err < 5)
     {
         *_goal_flag = 1; // goal is reached
         motor_stop();

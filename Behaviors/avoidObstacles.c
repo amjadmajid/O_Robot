@@ -71,17 +71,22 @@ void avoid_obstacle_controller()
 
     float theta_g = atan2(y_g, x_g);
 
+//    UART1_OutChar('O');
 //    UART1_OutUDec((uint32_t) (y_dir) );
 //    UART1_OutChar(' ');
 //    UART1_OutUDec((uint32_t) (x_dir) );
 //    UART1_OutChar(' ');
-//    UART1_OutUDec((uint32_t) (_robot->pose->y * 10) );
+//    UART1_OutUDec((uint32_t) (_robot->pose->y * 1000) );
 //    UART1_OutChar(' ');
-//    UART1_OutUDec((uint32_t) (_robot->pose->x * 10) );
-    UART1_OutChar(' ');
-    UART1_OutUDec((uint32_t) (theta_g * 10));
-    UART1_OutChar('\n');
-    UART1_OutChar('\r');
+//    UART1_OutUDec((uint32_t) (_robot->pose->x * 1000) );
+//    UART1_OutChar(' ');
+//    UART1_OutUDec((uint32_t) (y_g * 1000) );
+//    UART1_OutChar(' ');
+//    UART1_OutUDec((uint32_t) (x_g * 1000) );
+//    UART1_OutChar(' ');
+//    UART1_OutUDec((uint32_t) (theta_g * 10));
+//    UART1_OutChar('\n');
+//    UART1_OutChar('\r');
 
     float heading_error = theta_g - _robot->pose->theta;
     float err = atan2(sin(heading_error), cos(heading_error));
@@ -115,7 +120,7 @@ void avoid_obstacle_controller()
     float x_err = fabs((_robot->pose->x - _x_goal));
     float y_err = fabs((_robot->pose->y - _y_goal));
 
-    if (x_err < .05 && y_err < .05)
+    if (x_err < 5 && y_err < 5)
     {
         motor_stop();
         timerA1_stop();
