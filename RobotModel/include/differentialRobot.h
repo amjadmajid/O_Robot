@@ -53,7 +53,7 @@ typedef struct wheel
 typedef struct differential_robot
 {
     float base_len;  // the distance between the two wheels in meters
-    sensor_distance_t *sensor_distance;
+    sensor_distances_t *sensor_distances;
     pose_t *pose;
     wheel_t *right;
     wheel_t *left;

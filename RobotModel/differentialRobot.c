@@ -15,7 +15,7 @@
 tachometer_t right_tachometer = { 0, 0, 0 };
 tachometer_t left_tachometer = { 0, 0, 0 };
 pose_t pose = { 0, 0, 0 };                      // initial position of the robot
-sensor_distances_t sensor_distance = { MAX_SENSOR, MAX_SENSOR, MAX_SENSOR };
+sensor_distances_t sensor_distances = { MAX_SENSOR, MAX_SENSOR, MAX_SENSOR };
 
 wheel_t right_wheel;
 wheel_t left_wheel;
@@ -36,7 +36,7 @@ differential_robot_t* robot_init()
     robot.right = &right_wheel;
     robot.left = &left_wheel;
     robot.pose = &pose;
-    robot.sensor_distance = &sensor_distance;
+    robot.sensor_distances = &sensor_distances;
 
     return &robot;
 }

@@ -55,9 +55,9 @@ void avoid_obstacle_controller()
     //    }
 
     // pi/4= 0.785
-    left_sensor_rf = convert2rf(50, 50, 0.785, _robot->sensor_distance->sensor_left);
-    center_sensor_rf = convert2rf(70, 0, 0, _robot->sensor_distance->sensor_center);
-    right_sensor_rf = convert2rf(50, -50, -0.785, _robot->sensor_distance->sensor_right);
+    left_sensor_rf = convert2rf(50, 50, 0.785, _robot->sensor_distances->sensor_left);
+    center_sensor_rf = convert2rf(70, 0, 0, _robot->sensor_distances->sensor_center);
+    right_sensor_rf = convert2rf(50, -50, -0.785, _robot->sensor_distances->sensor_right);
 
     vector_2d left_sensor_wf = convert2wf(left_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);
     vector_2d center_sensor_wf = convert2wf(center_sensor_rf, _robot->pose->x, _robot->pose->y, _robot->pose->theta);

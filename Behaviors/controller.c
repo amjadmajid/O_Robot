@@ -131,9 +131,9 @@ void controller()
     // else 
     // run go to goal controller 
     if(sensor_type == 'i'){
-        ir_distances(&(_robot->sensor_distance->sensor_left), &(_robot->sensor_distance->sensor_center), &(_robot->sensor_distance->sensor_right));
+        ir_distances(&(_robot->sensor_distances->sensor_left), &(_robot->sensor_distances->sensor_center), &(_robot->sensor_distances->sensor_right));
     } else {
-        us_distances(&(_robot->sensor_distance->sensor_left), &(_robot->sensor_distance->sensor_center), &(_robot->sensor_distance->sensor_right));
+        us_distances(&(_robot->sensor_distances->sensor_left), &(_robot->sensor_distances->sensor_center), &(_robot->sensor_distances->sensor_right));
     }
     //   UART1_OutUDec((uint32_t) _robot->sensor_distance->sensor_left);
     //   UART1_OutChar(' ');
@@ -142,7 +142,7 @@ void controller()
     //   UART1_OutUDec((uint32_t) _robot->sensor_distance->sensor_right);
     //   UART1_OutChar('\n');
     //   UART1_OutChar('\r');
-    if (_robot->sensor_distance->sensor_left > controller_switch && _robot->sensor_distance->sensor_center > controller_switch && _robot->sensor_distance->sensor_right > controller_switch)
+    if (_robot->sensor_distances->sensor_left > controller_switch && _robot->sensor_distances->sensor_center > controller_switch && _robot->sensor_distances->sensor_right > controller_switch)
     {
         controller_switch = 500;
         go_to_goal_controller();
