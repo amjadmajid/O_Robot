@@ -24,12 +24,12 @@ differential_robot_t robot;
 differential_robot_t* robot_init()
 {
     // initialize right wheel
-    right_wheel.radius = RADIUS;
-    right_wheel.ticks_per_rev = 0;
+    right_wheel.dis_per_tick_numerator = TICK_DIS_NUMERATOR;
+    right_wheel.dis_per_tick_denominator = TICK_DIS_DENOMINATOR;
     right_wheel.tachometer = &right_tachometer;
     // initialize left wheel
-    left_wheel.radius = RADIUS;
-    left_wheel.ticks_per_rev = 0;
+    left_wheel.dis_per_tick_numerator = TICK_DIS_NUMERATOR;
+    left_wheel.dis_per_tick_denominator = TICK_DIS_DENOMINATOR;
     left_wheel.tachometer = &left_tachometer;
 
     robot.base_len = BASE_LENGTH;
@@ -49,23 +49,11 @@ float _robot_distance_update_mm(float d_r, float d_l)
 void _wheel_distance_update_mm(wheel_t *wheel)
 {
     // calculate the distance traveled since the last update
-    int32_t delta_ticks = wheel->tachometer->ticks - wheel->tachometer->prev_ticks;
-
-//    UART1_OutChar('W');
-//    UART1_OutChar(' ');
-//    UART1_OutUDec((uint32_t) (delta_ticks));
-//    UART1_OutChar(' ');
-//    UART1_OutUDec((uint32_t) (wheel->tachometer->prev_ticks) );
-//    UART1_OutChar(' ');
-//    UART1_OutUDec((uint32_t) (ticks) );
-// //   UART1_OutChar(' ');
-//    UART1_OutChar('\n');
-//    UART1_OutChar('\r');
-//    UART1_OutChar('T');
-
-    wheel->tachometer->delta_dis = (TICK_DIS_NUMERATOR * delta_ticks) / TICK_DIS_DENOMINATOR;  //distance in meter
-    wheel->tachometer->prev_ticks = wheel->tachometer->prev_ticks + delta_ticks;
-
+    int32_t ticks = wheel->tachometer->ticks;
+    float delta_ticks = ticks - wheel->tachometer->prev_ticks;
+    // update the previous tachometer ticks
+    wheel->tachometer->prev_ticks = ticks;
+    wheel->tachometer->delta_dis = (wheel->dis_per_tick_numerator * delta_ticks) / wheel->dis_per_tick_denominator;  //distance in meter
 }
 
 void robot_position_update(differential_robot_t *robot)
@@ -89,20 +77,4 @@ void robot_position_update(differential_robot_t *robot)
     robot->pose->x = x;
     robot->pose->y = y;
     robot->pose->theta = atan2f(sinf(theta), cosf(theta));
-
-
-//    UART1_OutChar('D');
-//    UART1_OutChar(' ');
-//    UART1_OutUDec((uint32_t) (d_r * 1000000) );
-//    UART1_OutChar(' ');
-//    UART1_OutUDec((uint32_t) (d_l * 1000000) );
-//    UART1_OutChar(' ');
-//    UART1_OutChar(' ');
-//    UART1_OutUDec((uint32_t) (robot->pose->y * 1000000) );
-//    UART1_OutChar(' ');
-//    UART1_OutUDec((uint32_t) (robot->pose->x * 1000000) );
-//    UART1_OutChar(' ');
-//    UART1_OutUDec((uint32_t) (robot->pose->theta * 1000000) );
-//    UART1_OutChar('\n');
-//    UART1_OutChar('\r');
 }

@@ -8,7 +8,7 @@
 #include "timer_A1.h"
 #include "interruptHandler.h"
 #include "controller.h"
-//#include "UART1.h"
+#include "UART1.h"
 #include "us_distance.h"
 
 #define CONTROL_PERIOD 5000
@@ -34,15 +34,13 @@ void main(void)
     initialize();
     differential_robot_t *robot = robot_init();
     controller_init(path[location_cntr][0], path[location_cntr][1], robot, CONTROL_PERIOD, &goal_reached);
-    //enableInterrupts();
+    enableInterrupts();
     //ultrasound_init();
+
+//    uint8_t control_code = '0';
 
     while (1)
     {
-//        temp = UART1_InChar();
-//        UART1_OutChar('g');
-//        UART1_OutChar(temp);
-        //us_distances(&(robot->us_distance->us_left), &(robot->us_distance->us_center), &(robot->us_distance->us_right));
         waitForInterrupt();
     }
 

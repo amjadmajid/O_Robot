@@ -20,6 +20,8 @@
 #define TICK_DIS_NUMERATOR 61          // to avoid float operation split the fraction
 #define TICK_DIS_DENOMINATOR 100000    // consequently you must multiply and then divide
 
+#define ULTRASOUND 0 // 1 if the robot has ultrasound sensors 0 if it has infrared sensors
+
 typedef struct sensor_distances
 {
     uint32_t sensor_left;
@@ -45,8 +47,8 @@ typedef struct pose
 
 typedef struct wheel
 {
-    float radius;
-    uint32_t ticks_per_rev;
+    uint32_t dis_per_tick_numerator;
+    uint32_t dis_per_tick_denominator;
     tachometer_t *tachometer;
 } wheel_t;
 

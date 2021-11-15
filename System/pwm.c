@@ -22,11 +22,11 @@ void pwm_init(uint32_t period, uint32_t dutyCycle)
     if (dutyCycle >= period)
         return; //invalid duty cycles
 
-    //makes it output
-    P2->DIR |= (BIT6 + BIT7 );
     // selecting timer functionality 
     P2->SEL0 |= (BIT6 + BIT7 );
     P2->SEL1 &= ~(BIT6 + BIT7 );
+    //makes it output
+    P2->DIR |= (BIT6 + BIT7 );
 
     // configure Timer_A0 counter
     TIMER_A0->CCTL[0] = 0x0080;  				        //CCI0 toggle (has no effect)

@@ -42,7 +42,7 @@ uint32_t right_convert(uint32_t nr)
 
 // Initialize the channels 17, 14 and 16 for analog to digital conversion
 // These channels represent the left, middle and right infrared sensors respectively
-void adc_init_channel_17_14_16(void)
+void adc_init_channel_14_16_17(void)
 {
     ADC14->CTL0 &= ~ADC14_CTL0_ENC;        // to allow programming
     while (ADC14->CTL0 & 0x00010000)
@@ -51,9 +51,9 @@ void adc_init_channel_17_14_16(void)
     ADC14->CTL0 = ADC14_CTL0_ON | ADC14_CTL0_MSC | ADC14_CTL0_SHT0__32 | ADC14_CTL0_SHT1__32 | ADC14_CTL0_CONSEQ_1 |
     ADC14_CTL0_SSEL__SMCLK | ADC14_CTL0_DIV__1 | ADC14_CTL0_SHP;          //  single, SMCLK, on, disabled, /1, 32 SHM
     ADC14->CTL1 = 0x00000030;                 // ADC14MEM0, 14-bit, ref on, regular power
-    ADC14->MCTL[0] = ADC14_MCTLN_INCH_17;
-    ADC14->MCTL[1] = ADC14_MCTLN_INCH_14;
-    ADC14->MCTL[2] = ADC14_MCTLN_INCH_16 | ADC14_MCTLN_EOS;
+    ADC14->MCTL[0] = ADC14_MCTLN_INCH_14;
+    ADC14->MCTL[1] = ADC14_MCTLN_INCH_16;
+    ADC14->MCTL[2] = ADC14_MCTLN_INCH_17 | ADC14_MCTLN_EOS;
     ;         // 0 to 3.3V, channel 17
     ADC14->IER0 = 0; // no interrupts
     ADC14->IER1 = 0; // no interrupts
@@ -73,7 +73,7 @@ volatile uint32_t adc14_mem_0 = 0;
 volatile uint32_t adc14_mem_1 = 0;
 volatile uint32_t adc14_mem_2 = 0;
 
-void read_adc_17_14_16()
+void read_adc_14_16_17()
 {
     while (ADC14->CTL0 & 0x00010000)
     {
@@ -91,11 +91,10 @@ void read_adc_17_14_16()
 
 void ir_distances(uint32_t *left, uint32_t *center, uint32_t *right)
 {
-
-    read_adc_17_14_16();
-    *left = left_convert(adc14_mem_0);         // left is channel 17, P9.0
-    *center = center_convert(adc14_mem_1);     // center is channel 14, P6.1
-    *right = right_convert(adc14_mem_2);       // right is channel 16, P9.1
+    read_adc_14_16_17();
+    *left = left_convert(adc14_mem_0);         // left is channel 14, P6.1
+    *center = center_convert(adc14_mem_1);     // center is channel 16, P9.1
+    *right = right_convert(adc14_mem_2);       // right is channel 17, P9.0
 
 }
 

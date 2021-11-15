@@ -82,6 +82,8 @@
  */
 #define DEL  0x7F
 
+int RxFifo_Get(uint8_t *datapt);
+
 /**
  * @details   Initialize EUSCI_A2 for UART operation
  * @details   115,200 baud rate (assuming 12 MHz SMCLK clock),

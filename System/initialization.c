@@ -17,8 +17,10 @@ void press_buttons_to_go(void)
     P1->REN |= (BIT1 + BIT4 );
     P1->OUT |= (BIT1 + BIT4 ); // pull-up resistors
 
-    while (read_buttons() == 0x00); // wait for press
-    while (read_buttons() != 0x00); // wait for release
+    while (read_buttons() == 0x00)
+        ; // wait for press
+    while (read_buttons() != 0x00)
+        ; // wait for release
 }
 
 void initialize()
@@ -31,5 +33,9 @@ void initialize()
     UART1_Init();
     press_buttons_to_go();
     enableInterrupts();
-    UART1_OutString("START");
+#if ULTRASOUND == 0
+    UART1_OutString("START INFRARED\r\n");
+#elif ULTRASOUND == 1
+    UART1_OutString("START ULTRASOUND\r\n");
+#endif
 }

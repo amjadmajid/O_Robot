@@ -31,48 +31,36 @@ int32_t left_duty_cycle;
 int32_t right_duty_cycle;
 differential_robot_t *_robot;
 
-uint16_t Tachometer_FirstRightTime, Tachometer_SecondRightTime;
-uint16_t Tachometer_FirstLeftTime, Tachometer_SecondLeftTime;
-int Tachometer_RightSteps = 0;     // incremented with every step forward; decremented with every step backward
-int Tachometer_LeftSteps = 0;      // incremented with every step forward; decremented with every step backward
-enum TachDirection Tachometer_RightDir = STOPPED;
-enum TachDirection Tachometer_LeftDir = STOPPED;
-
-//select whether infrared (i) or ultrasound (u) sensors are used for the robot
-char sensor_type = 'u';
+//select whether infrared or ultrasound sensors are used for the robot in differentialRobot.h
 
 void controller();
 
-void leftTachometer(uint16_t currenttime){
-  Tachometer_FirstLeftTime = Tachometer_SecondLeftTime;
-  Tachometer_SecondLeftTime = currenttime;
-//  _robot->left->tachometer->prev_ticks = Tachometer_LeftSteps;
-  if(left_duty_cycle < 0){
-    // Encoder B is low, so this is a step backward
-    Tachometer_LeftSteps = Tachometer_LeftSteps - 1;
-    Tachometer_LeftDir = REVERSE;
-  }else{
-    // Encoder B is high, so this is a step forward
-    Tachometer_LeftSteps = Tachometer_LeftSteps + 1;
-    Tachometer_LeftDir = FORWARD;
-  }
-  _robot->left->tachometer->ticks = Tachometer_LeftSteps;
+void leftTachometer(void)
+{
+    int32_t tks = _robot->left->tachometer->ticks;
+    if (left_duty_cycle >= 0)
+    {
+        tks++;
+    }
+    else
+    {
+        tks--;
+    }
+    _robot->left->tachometer->ticks = tks;
 }
 
-void rightTachometer(uint16_t currenttime){
-  Tachometer_FirstRightTime = Tachometer_SecondRightTime;
-  Tachometer_SecondRightTime = currenttime;
-//  _robot->right->tachometer->prev_ticks = Tachometer_RightSteps;
-  if(right_duty_cycle < 0){
-    // Encoder B is low, so this is a step backward
-    Tachometer_RightSteps = Tachometer_RightSteps - 1;
-    Tachometer_RightDir = REVERSE;
-  }else{
-    // Encoder B is high, so this is a step forward
-    Tachometer_RightSteps = Tachometer_RightSteps + 1;
-    Tachometer_RightDir = FORWARD;
-  }
-  _robot->right->tachometer->ticks = Tachometer_RightSteps;
+void rightTachometer(void)
+{
+    int32_t tks = _robot->right->tachometer->ticks;
+    if (right_duty_cycle >= 0)
+    {
+        tks++;
+    }
+    else
+    {
+        tks--;
+    }
+    _robot->right->tachometer->ticks = tks;
 }
 
 void duty_check(int32_t *left_duty_cycle, int32_t *right_duty_cycle)
@@ -102,70 +90,85 @@ void controller_init(float x_g, float y_g, differential_robot_t *robot_pt, uint3
     pwm_init(15000, 0);
     timerA1_init(&controller, p);
 
-    if(sensor_type == 'i'){
-        adc_init_channel_17_14_16();
-        //initialize the ADC for the ir distance sensor
-        uint32_t *init_left = NULL;
-        uint32_t *init_center = NULL;
-        uint32_t *init_right = NULL;
-        ir_distances(init_left, init_center, init_right);
-        //initialize the Low Pass Filters for the ir distance sensors
-        LPF_Init(*init_left, 32);       // P9.0/channel 17
-        LPF_Init2(*init_center, 32);    // P6.1/channel 14
-        LPF_Init3(*init_right, 32);     // P9.1/channel 16
-    } else {
-        ultrasound_init();
-    }
+#if ULTRASOUND == 0
+    adc_init_channel_14_16_17();
+    //initialize the ADC for the ir distance sensor
+    uint32_t *init_left = NULL;
+    uint32_t *init_center = NULL;
+    uint32_t *init_right = NULL;
+    ir_distances(init_left, init_center, init_right);
+    //initialize the Low Pass Filters for the ir distance sensors
+    LPF_Init(*init_left, 32);       // P9.0/channel 17
+    LPF_Init2(*init_center, 32);    // P6.1/channel 14
+    LPF_Init3(*init_right, 32);     // P9.1/channel 16
+#elif ULTRASOUND == 1
+    ultrasound_init();
+#endif
 }
 
 uint16_t controller_switch = 500;
+uint8_t control_code = '0';
 
 void controller()
 {
     P1->OUT |= BIT5;
     P1->OUT &= ~BIT5;
+    uint16_t res = RxFifo_Get(&control_code);
+    //    if (res == 1)
+    //    {
+    //        UART1_OutChar(control_code);
+    //    }
 
-    // updating the sensor distance measurements
-    // if sensor distance is greater than 50 cm
-    // run avoid obstacles controller
-    // else 
-    // run go to goal controller 
-    if(sensor_type == 'i'){
-        ir_distances(&(_robot->sensor_distances->sensor_left), &(_robot->sensor_distances->sensor_center), &(_robot->sensor_distances->sensor_right));
-    } else {
-        us_distances(&(_robot->sensor_distances->sensor_left), &(_robot->sensor_distances->sensor_center), &(_robot->sensor_distances->sensor_right));
-    }
-    //   UART1_OutUDec((uint32_t) _robot->sensor_distance->sensor_left);
-    //   UART1_OutChar(' ');
-    //   UART1_OutUDec((uint32_t) _robot->sensor_distance->sensor_center);
-    //   UART1_OutChar(' ');
-    //   UART1_OutUDec((uint32_t) _robot->sensor_distance->sensor_right);
-    //   UART1_OutChar('\n');
-    //   UART1_OutChar('\r');
-    if (_robot->sensor_distances->sensor_left > controller_switch && _robot->sensor_distances->sensor_center > controller_switch && _robot->sensor_distances->sensor_right > controller_switch)
+    if (control_code == '1')
     {
-        controller_switch = 500;
-        go_to_goal_controller();
+        // updating the sensor distance measurements
+        // if sensor distance is greater than 50 cm
+        // run avoid obstacles controller
+        // else
+        // run go to goal controller
+#if ULTRASOUND == 0
+        ir_distances(&(_robot->sensor_distances->sensor_left), &(_robot->sensor_distances->sensor_center), &(_robot->sensor_distances->sensor_right));
+#elif ULTRASOUND == 1
+        us_distances(&(_robot->sensor_distances->sensor_left), &(_robot->sensor_distances->sensor_center), &(_robot->sensor_distances->sensor_right));
+#endif
+
+//        if (_robot->sensor_distances->sensor_left > controller_switch && _robot->sensor_distances->sensor_center > controller_switch && _robot->sensor_distances->sensor_right > controller_switch)
+//        {
+//            controller_switch = 500;
+//            go_to_goal_controller();
+//        }
+//        //     else
+//        //      ( _robot->sensor_distance->sensor_left > 300 &&
+//        //            _robot->sensor_distance->sensor_center > 300 &&
+//        //            _robot->sensor_distance->sensor_right > 300)
+//        //  {
+//        //    controller_switch = 500;
+//        //    blended_controller();
+//        //  }
+//        else
+//        {
+//            controller_switch = 600;
+            avoid_obstacle_controller();
+//        }
     }
-    //     else
-    //      ( _robot->sensor_distance->sensor_left > 300 &&
-    //            _robot->sensor_distance->sensor_center > 300 &&
-    //            _robot->sensor_distance->sensor_right > 300)
-    //  {
-    //    controller_switch = 500;
-    //    blended_controller();
-    //  }
     else
     {
-        controller_switch = 600;
-        avoid_obstacle_controller();
+        motor_forward(0, 0);
     }
 
-    UART1_OutUDec((uint32_t) _robot->pose->x);
+    UART1_OutUDec((uint32_t) _robot->sensor_distances->sensor_left);
     UART1_OutChar(' ');
-    UART1_OutUDec((uint32_t) _robot->pose->y);
+    UART1_OutUDec((uint32_t) _robot->sensor_distances->sensor_center);
     UART1_OutChar(' ');
-    UART1_OutUDec((uint32_t) _robot->pose->theta);
-    UART1_OutChar('\n');
+    UART1_OutUDec((uint32_t) _robot->sensor_distances->sensor_right);
     UART1_OutChar('\r');
+    UART1_OutChar('\n');
+
+    //    UART1_OutUDec((uint32_t) _robot->pose->x);
+    //    UART1_OutChar(' ');
+    //    UART1_OutUDec((uint32_t) _robot->pose->y);
+    //    UART1_OutChar(' ');
+    //    UART1_OutUDec((uint32_t) _robot->pose->theta);
+    //    UART1_OutChar('\r');
+    //    UART1_OutChar('\n');
 }
