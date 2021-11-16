@@ -14,9 +14,9 @@
 
 #define MAXDISTANCE 800
 
-int distanceMid
-int distanceLeft
-int distanceRight
+int distanceMid;
+int distanceLeft;
+int distanceRight;
 
 void SetDistanceMid(int timeOut){
     //timeOut is a value in microseconds
@@ -204,9 +204,9 @@ void ultrasound_init(void)
 
 void us_distances(uint32_t *left, uint32_t *center, uint32_t *right)
 {
-    distanceMid = SetDistanceMid(2333)
-    distanceLeft = SetDistanceLeft(2333)
-    distanceRight = SetDistanceRight(2333)
+    SetDistanceMid(2333);
+    SetDistanceLeft(2333);
+    SetDistanceRight(2333);
     
     *center = distanceMid;
     *left = distanceLeft;
