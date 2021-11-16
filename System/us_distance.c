@@ -14,7 +14,11 @@
 
 #define MAXDISTANCE 800
 
-uint32_t SetDistanceMid(int timeOut){
+int distanceMid
+int distanceLeft
+int distanceRight
+
+void SetDistanceMid(int timeOut){
     //timeOut is a value in microseconds
     //it is used to exit the while loop if the signal is not found within the time limit
 
@@ -57,10 +61,10 @@ uint32_t SetDistanceMid(int timeOut){
 
     //Rate of sound in air is approximately 0.343 milimeters per microsecond
     //Distance = Rate * time
-    return (0.343 * time);
+    distanceMid = (0.343 * time);
 }
 
-uint32_t SetDistanceLeft(int timeOut){
+void SetDistanceLeft(int timeOut){
     //timeOut is a value in microseconds
     //it is used to exit the while loop if the signal is not found
 
@@ -106,10 +110,10 @@ uint32_t SetDistanceLeft(int timeOut){
 
     //Rate of sound in air is approximately 0.343 milimeters per microsecond
     //Distance = Rate * time
-    return (0.343 * time);
+    distanceLeft = (0.343 * time);
 }
 
-uint32_t SetDistanceRight(int timeOut){
+void SetDistanceRight(int timeOut){
     //timeOut is a value in microseconds
     //it is used to exit the while loop if the signal is not found
 
@@ -155,7 +159,7 @@ uint32_t SetDistanceRight(int timeOut){
 
     //Rate of sound in air is approximately 0.343 milimeters per microsecond
     //Distance = Rate * time
-    return (0.343 * time);
+    distanceRight = (0.343 * time);
 }
 
 
@@ -200,9 +204,12 @@ void ultrasound_init(void)
 
 void us_distances(uint32_t *left, uint32_t *center, uint32_t *right)
 {
-
-    *center = SetDistanceMid(2333);
-    *left = SetDistanceLeft(2333);
-    *right = SetDistanceRight(2333);
+    distanceMid = SetDistanceMid(2333)
+    distanceLeft = SetDistanceLeft(2333)
+    distanceRight = SetDistanceRight(2333)
+    
+    *center = distanceMid;
+    *left = distanceLeft;
+    *right = distanceRight;
 
 }
