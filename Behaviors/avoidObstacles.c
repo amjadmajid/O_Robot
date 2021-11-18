@@ -120,7 +120,7 @@ void avoid_obstacle_controller()
     float x_err = fabs((_robot->pose->x - _x_goal));
     float y_err = fabs((_robot->pose->y - _y_goal));
 
-    if (x_err < 5 && y_err < 5)
+    if (x_err < .05 && y_err < .05)
     {
         motor_stop();
         timerA1_stop();

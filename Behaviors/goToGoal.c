@@ -91,7 +91,7 @@ void go_to_goal_controller()
 //    UART1_OutChar('\r');
 
 //    if (x_err < .05 && y_err < .05)
-    if (x_err < 5 && y_err < 5)
+    if (x_err < .05 && y_err < .05)
     {
         *_goal_flag = 1; // goal is reached
         motor_stop();
