@@ -96,13 +96,13 @@ def main(scr):
         if(ready == 1):
             if(dataPoint != None and dataPoint[0] == 'a'):
                 if(int(dataPoint[1]) >= 60):
-                    print("Level: " + str(int(dataPoint[1])) + " GO! - 1")
+                    # pads[0].addstr("Level: " + str(int(dataPoint[1])) + " GO! - 1")
                     pads[0].addstr(b'1')
                     for i in range(count):
                         (conn, addr) = conns[i]
                         conn.sendto(b'1', (addr[0], addr[1]))
                 else:
-                    print("Level: " + str(int(dataPoint[1])) + " STOP - 0")
+                    # pads[0].addstr("Level: " + str(int(dataPoint[1])) + " STOP - 0")
                     pads[0].addstr(b'0')
                     for i in range(count):
                         (conn, addr) = conns[i]
@@ -125,19 +125,19 @@ def main(scr):
                     blinkcounter.clear()
                 if(len(blinkcounter) == 500):
                     if(blink == 1):
-                        print("Blinks: " + str(blink) + " TURN RIGHT! - 2")
+                        # pads[0].addstr("Blinks: " + str(blink) + " TURN RIGHT! - 2")
                         pads[0].addstr(b'2')
                         for i in range(count):
                             (conn, addr) = conns[i]
                             conn.sendto(b'2', (addr[0], addr[1]))
                     elif(blink == 2):
-                        print("Blinks: " + str(blink) + " TURN LEFT! - 3")
+                        # pads[0].addstr("Blinks: " + str(blink) + " TURN LEFT! - 3")
                         pads[0].addstr(b'3')
                         for i in range(count):
                             (conn, addr) = conns[i]
                             conn.sendto(b'3', (addr[0], addr[1]))
                     else:
-                        print("Blinks: " + str(blink) + " TURN BACK! - 4")
+                        # pads[0].addstr("Blinks: " + str(blink) + " TURN BACK! - 4")
                         pads[0].addstr(b'4')
                         for i in range(count):
                             (conn, addr) = conns[i]
