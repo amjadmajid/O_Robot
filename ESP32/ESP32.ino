@@ -3,7 +3,7 @@
 char ssid[] = "";          //  your network SSID (name) 2.4ghz
 char pass[] = "";          //  your network password
 
-char servername[]="";
+char servername[]="";     //IP address of server
 int port = 1234;
 
 WiFiClient client;
