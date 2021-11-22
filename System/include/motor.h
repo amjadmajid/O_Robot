@@ -9,7 +9,7 @@
 
 #define SLEEP P3->OUT
 #define POWER P2->OUT
-#define DIRECTION P1->OUT
+#define DIRECTION P5->OUT
 
 /** ------------motor_init------------
  *@brief : setup the connections between the MCU and the DC motors

@@ -2,6 +2,7 @@
 #include "UART1.h"
 #include "clock.h"
 #include "interruptHandler.h"
+#include "differentialRobot.h"
 
 uint8_t read_buttons()
 {
@@ -34,8 +35,8 @@ void initialize()
     press_buttons_to_go();
     enableInterrupts();
 #if ULTRASOUND == 0
-    UART1_OutString("START INFRARED\r\n");
+    UART1_OutString("START INFRARED\n");
 #elif ULTRASOUND == 1
-    UART1_OutString("START ULTRASOUND\r\n");
+    UART1_OutString("START ULTRASOUND\n");
 #endif
 }
