@@ -16,11 +16,12 @@
 #include "goToGoal.h"
 #include "avoidObstacles.h"
 #include "blendedController.h"
+#include "Clock.h"
 
 // the linear velocity amplified by 100 for integer math purpose 
 #define LINEAR_VELOCITY 35000
 #define DUTY_CYCLE 3750
-#define SPEED 10000
+#define SPEED 5000
 
 float _x_goal;
 float _y_goal;
@@ -109,6 +110,7 @@ void controller_init(float x_g, float y_g, differential_robot_t *robot_pt, uint3
 
 uint16_t controller_switch = 500;
 uint8_t control_code = '0';
+uint8_t go = '0';
 
 void controller()
 {
@@ -117,17 +119,41 @@ void controller()
     uint16_t res = RxFifo_Get(&control_code);
     if (res == 1)
     {
+        if (control_code == '1' || control_code == '0')
+        {
+            go = control_code;
+        }
+
+        if (go == '1')
+        {
+            if (control_code == '3')
+            {
+                motor_left(SPEED, SPEED);
+            }
+            else if (control_code == '4')
+            {
+                motor_right(SPEED, SPEED);
+            }
+            else if (control_code == '1')
+            {
+                motor_forward(SPEED, SPEED);
+            }
+        }
+        else
+        {
+            motor_stop();
+        }
+
         UART1_OutChar(control_code);
         UART1_OutChar('\n');
     }
 
-
-    if (control_code == '1')
-    {
-        // updating the sensor distance measurements
-        // if sensor distance is greater than 50 cm
-        // run avoid obstacles controller
-        // else
+//    if (control_code == '1')
+//    {
+    // updating the sensor distance measurements
+    // if sensor distance is greater than 50 cm
+    // run avoid obstacles controller
+    // else
 //        // run go to goal controller
 //#if ULTRASOUND == 0
 //        ir_distances(&(_robot->sensor_distances->sensor_left), &(_robot->sensor_distances->sensor_center), &(_robot->sensor_distances->sensor_right));
@@ -152,39 +178,37 @@ void controller()
 //        {
 //            controller_switch = 600;
 //            avoid_obstacle_controller();
-        motor_forward(SPEED, SPEED);
+//        motor_forward(SPEED, SPEED);
 //        }
-    }
-    else if (control_code == '2')
-    {
-        motor_left(SPEED, SPEED);
-    }
-    else if (control_code == '3')
-    {
-        motor_right(SPEED, SPEED);
-    }
-    else if (control_code == '4')
-    {
-        motor_backward(SPEED, SPEED);
-    }
-    else
-    {
-        motor_forward(0, 0);
-    }
-
+//    else if (control_code == '2')
+//    {
+//
+//    }
+//    else if (control_code == '3')
+//    {
+//        motor_right(SPEED, SPEED);
+//    }
+//    else if (control_code == '4')
+//    {
+//        motor_backward(SPEED, SPEED);
+//    }
+//    else
+//    {
+//        motor_forward(0, 0);
+//    }
+//
 //    UART1_OutUDec((uint32_t) _robot->sensor_distances->sensor_left);
-//    UART1_OutChar(' ');
+//    UART1_OutChar('\t');
 //    UART1_OutUDec((uint32_t) _robot->sensor_distances->sensor_center);
-//    UART1_OutChar(' ');
+//    UART1_OutChar('\t');
 //    UART1_OutUDec((uint32_t) _robot->sensor_distances->sensor_right);
-//    UART1_OutChar('\r');
 //    UART1_OutChar('\n');
 
-    //    UART1_OutUDec((uint32_t) _robot->pose->x);
-    //    UART1_OutChar(' ');
-    //    UART1_OutUDec((uint32_t) _robot->pose->y);
-    //    UART1_OutChar(' ');
-    //    UART1_OutUDec((uint32_t) _robot->pose->theta);
-    //    UART1_OutChar('\r');
-    //    UART1_OutChar('\n');
+//    UART1_OutUDec((uint32_t) _robot->pose->x);
+//    UART1_OutChar(' ');
+//    UART1_OutUDec((uint32_t) _robot->pose->y);
+//    UART1_OutChar(' ');
+//    UART1_OutUDec((uint32_t) _robot->pose->theta);
+//    UART1_OutChar('\r');
+//    UART1_OutChar('\n');
 }

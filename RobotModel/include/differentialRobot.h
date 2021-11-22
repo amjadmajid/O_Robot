@@ -20,7 +20,7 @@
 #define TICK_DIS_NUMERATOR 61          // to avoid float operation split the fraction
 #define TICK_DIS_DENOMINATOR 100000    // consequently you must multiply and then divide
 
-#define ULTRASOUND 0 // 1 if the robot has ultrasound sensors 0 if it has infrared sensors
+#define ULTRASOUND 1 // 1 if the robot has ultrasound sensors 0 if it has infrared sensors
 
 typedef struct sensor_distances
 {
