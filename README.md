@@ -4,9 +4,9 @@ O_Robot is a project working towards fully functional Brain Swarm Interfaces (BS
 ## Installation
 
 ### Programming the Raspberry Pi:
-Download and install Python3 using ```sudo apt-get python3```.
+Download and install Python3, Pip3 and all packages for bluetooth on the Raspberry Pi using ```sudo apt-get install python3 python3-pip bluetooth bluez blueman```.
 
-Download and install pybluez and curses using ```sudo pip3 install pybluez curses```.
+Download and install pybluez using ```sudo pip3 install pybluez```.
 
 Copy the files located under [RPI](RPI) to a folder on the Raspberry Pi.
 
