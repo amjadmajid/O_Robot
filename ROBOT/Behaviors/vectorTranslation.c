@@ -16,7 +16,6 @@ vector_2d convert2rf(float x_s, float y_s, float theta, uint32_t sensor_distance
     vector_2d sensor_vec;
     sensor_vec.x = cos(theta) * sensor_distance + x_s;
     sensor_vec.y = sin(theta) * sensor_distance + y_s;
-//  }
 
     return sensor_vec;
 }

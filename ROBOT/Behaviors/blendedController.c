@@ -30,27 +30,13 @@ vector_2d left_sensor_rf;
 vector_2d center_sensor_rf;
 vector_2d right_sensor_rf;
 
-//int32_t left_duty_cycle_bc[LEN_BC_DEBUG] = {0};
-//int32_t right_duty_cycle_bc[LEN_BC_DEBUG]= {0};
-//float theta_current[LEN_BC_DEBUG];
-//float theta_goal[LEN_BC_DEBUG];
-//float w_bc[LEN_BC_DEBUG];
-
 double static E_i = 0;
 float static K_i = 2.6;
 float static K_p = 330;
 
 void blended_controller()
 {
-
-//    if(cntr_bc_debug < LEN_BC_DEBUG){
-//        ir_left_bc[cntr_bc_debug] = _robot->ir_distance->ir_left;
-//        ir_right_bc[cntr_bc_debug]   = _robot->ir_distance->ir_right;
-//        cntr_bc_debug++;
-//    }
-
-// pi/4= 0.785
-
+    // 90 degress in radians is 0.785
     left_sensor_rf = convert2rf(50, 50, 0.785, _robot->sensor_distances->sensor_left);
     center_sensor_rf = convert2rf(70, 0, 0, _robot->sensor_distances->sensor_center);
     right_sensor_rf = convert2rf(50, -50, -0.785, _robot->sensor_distances->sensor_right);
@@ -68,7 +54,7 @@ void blended_controller()
     float x_g = _x_goal - _robot->pose->x;
     float y_g = _y_goal - _robot->pose->y;
 
-// vector normalization 
+    // vector normalization
     float denominator = sqrt((x_o * x_o) + (y_o * y_o));
     float x_o_n = x_o / denominator;
     float y_o_n = y_o / denominator;
@@ -82,19 +68,7 @@ void blended_controller()
     x_dir = alpha * x_g_n + (1 - alpha) * x_o_n;
     y_dir = alpha * y_g_n + (1 - alpha) * y_o_n;
 
-//  P1->OUT &=~BIT5;
-//  P1->OUT |=BIT5;
-//  printf( "%d %d\n", (uint16_t)x_o, (uint16_t)y_o );
-//  P1->OUT |=BIT5;
-//  P1->OUT &=~BIT5;
-
     float theta_g = atan2(y_dir, x_dir);
-
-//  P1->OUT &=~BIT5;
-//  P1->OUT |=BIT5;
-//  printf( "%d %d\n", (uint16_t)(theta_g * 100), (uint16_t)( _robot->pose->theta * 100) );
-//  P1->OUT |=BIT5;
-//  P1->OUT &=~BIT5;
 
     float heading_error = theta_g - _robot->pose->theta;
     float err = atan2(sin(heading_error), cos(heading_error));
@@ -104,21 +78,8 @@ void blended_controller()
     float U_p = (K_p * err);
     float w = U_p + U_i;
 
-//  if(cntr_bc_debug < LEN_BC_DEBUG){
-//      theta_current[cntr_bc_debug] = _robot->pose->theta;
-//      theta_goal[cntr_bc_debug]   = theta_g;
-//      w_bc[cntr_bc_debug] = w;
-//      cntr_bc_debug++;
-//  }
-
     left_duty_cycle = (linear_velocity - w * 14) / 7;
     right_duty_cycle = (linear_velocity + w * 14) / 7;
-
-//  if(cntr_bc_debug < LEN_BC_DEBUG){
-//      left_duty_cycle_bc[cntr_bc_debug] = left_duty_cycle;
-//      right_duty_cycle_bc[cntr_bc_debug]   = right_duty_cycle;
-//      cntr_bc_debug++;
-//  }
 
     duty_check(&left_duty_cycle, &right_duty_cycle);
 

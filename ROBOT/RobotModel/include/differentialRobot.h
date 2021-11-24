@@ -27,7 +27,6 @@ typedef struct sensor_distances
     uint32_t sensor_left;
     uint32_t sensor_center;
     uint32_t sensor_right;
-
 } sensor_distances_t;
 
 

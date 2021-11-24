@@ -39,14 +39,6 @@ void go_to_goal_controller()
     float delta_y = _y_goal - _robot->pose->y;
     theta_goal = atan2(delta_y, delta_x);
 
-//    UART1_OutChar('G');
-//    UART1_OutChar(' ');
-//    UART1_OutUDec((uint32_t) (_robot->pose->y * 1000) );
-//    UART1_OutChar(' ');
-//    UART1_OutUDec((uint32_t) (_robot->pose->x * 1000) );
-//    UART1_OutChar('\n');
-//    UART1_OutChar('\r');
-
     float heading_error = theta_goal - _robot->pose->theta;
     float err = atan2(sin(heading_error), cos(heading_error));
 
@@ -55,26 +47,8 @@ void go_to_goal_controller()
     float U_p = (K_p * err);
     float w = U_p + U_i;
 
-//--------------------------------Acceleration--------------------------------------
-// # Todo Can we use acceleration ?
-
-//    if (time < 400)
-//    {
-//        linear_velocity +=50;
-//    }
-
-//  left_duty_cycle = (linear_velocity - w * L )/(meter_per_rev);
-//  right_duty_cycle = (linear_velocity + w * L )/(meter_per_rev);
-//--------------------------------Acceleration--------------------------------------
-
     left_duty_cycle = (linear_velocity - w * 14) / 7;
     right_duty_cycle = (linear_velocity + w * 14) / 7;
-
-//    UART1_OutUDec((uint32_t) left_duty_cycle );
-//    UART1_OutChar(' ');
-//    UART1_OutUDec((uint32_t) right_duty_cycle );
-//    UART1_OutChar('\n');
-//    UART1_OutChar('\r');
 
     duty_check(&left_duty_cycle, &right_duty_cycle);
 
@@ -84,13 +58,6 @@ void go_to_goal_controller()
     float x_err = fabs((_robot->pose->x - _x_goal));
     float y_err = fabs((_robot->pose->y - _y_goal));
 
-//    UART1_OutUDec((uint32_t) (x_err  * 100) );
-//    UART1_OutChar(' ');
-//    UART1_OutUDec((uint32_t) (y_err *100) );
-//    UART1_OutChar('\n');
-//    UART1_OutChar('\r');
-
-//    if (x_err < .05 && y_err < .05)
     if (x_err < .05 && y_err < .05)
     {
         *_goal_flag = 1; // goal is reached

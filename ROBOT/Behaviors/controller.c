@@ -33,8 +33,6 @@ int32_t left_duty_cycle;
 int32_t right_duty_cycle;
 differential_robot_t *_robot;
 
-//select whether infrared or ultrasound sensors are used for the robot in differentialRobot.h
-
 void controller();
 
 void leftTachometer(void)
@@ -67,7 +65,7 @@ void rightTachometer(void)
 
 void duty_check(int32_t *left_duty_cycle, int32_t *right_duty_cycle)
 {
-    // control the max and the min of the duty cycle
+    // limit the max and the min of the duty cycle
     if (*right_duty_cycle > 11000)
         *right_duty_cycle = 11000;
     if (*right_duty_cycle < -11000)
@@ -150,30 +148,30 @@ void controller()
 
 //    if (control_code == '1')
 //    {
-    // updating the sensor distance measurements
-    // if sensor distance is greater than 50 cm
-    // run avoid obstacles controller
-    // else
+//    // updating the sensor distance measurements
+//    // if sensor distance is greater than 50 cm
+//    // run avoid obstacles controller
+//    // else
 //        // run go to goal controller
 //#if ULTRASOUND == 0
 //        ir_distances(&(_robot->sensor_distances->sensor_left), &(_robot->sensor_distances->sensor_center), &(_robot->sensor_distances->sensor_right));
 //#elif ULTRASOUND == 1
 //        us_distances(&(_robot->sensor_distances->sensor_left), &(_robot->sensor_distances->sensor_center), &(_robot->sensor_distances->sensor_right));
 //#endif
-
+//
 //        if (_robot->sensor_distances->sensor_left > controller_switch && _robot->sensor_distances->sensor_center > controller_switch && _robot->sensor_distances->sensor_right > controller_switch)
 //        {
 //            controller_switch = 500;
 //            go_to_goal_controller();
 //        }
-//        //     else
-//        //      ( _robot->sensor_distance->sensor_left > 300 &&
-//        //            _robot->sensor_distance->sensor_center > 300 &&
-//        //            _robot->sensor_distance->sensor_right > 300)
-//        //  {
-//        //    controller_switch = 500;
-//        //    blended_controller();
-//        //  }
+//             else
+//              ( _robot->sensor_distance->sensor_left > 300 &&
+//                    _robot->sensor_distance->sensor_center > 300 &&
+//                    _robot->sensor_distance->sensor_right > 300)
+//          {
+//            controller_switch = 500;
+//            blended_controller();
+//          }
 //        else
 //        {
 //            controller_switch = 600;
@@ -203,12 +201,11 @@ void controller()
 //    UART1_OutChar('\t');
 //    UART1_OutUDec((uint32_t) _robot->sensor_distances->sensor_right);
 //    UART1_OutChar('\n');
-
+//
 //    UART1_OutUDec((uint32_t) _robot->pose->x);
 //    UART1_OutChar(' ');
 //    UART1_OutUDec((uint32_t) _robot->pose->y);
 //    UART1_OutChar(' ');
 //    UART1_OutUDec((uint32_t) _robot->pose->theta);
-//    UART1_OutChar('\r');
 //    UART1_OutChar('\n');
 }
