@@ -69,7 +69,8 @@ Connect the ESP32 to the TI RSLK MAX as follows:
 |   RX0 |        P3.3 |
 |   TX0 |        P3.2 |
 
-The entire setup should look something like this, where the number of robots may differ:
+The entire setup should look something like this, where the number of ESP32s and TI RSLK MAXs may differ:
+
 ![Global Test Setup](global_test_setup.png)
 
 ## Starting everything:
