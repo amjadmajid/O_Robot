@@ -89,4 +89,4 @@ Make sure you did not flip the RX and TX pins.
 Make sure Vin is connected to 5V (not 3V3 which would cause the brownout detector to trigger).
 
 ## Extras:
-The folder [EXPERIMENTS](EXPERIMENTS) contains the files for all four of the experiments used in the paper about this project: [Towards Brain Swarm Interfaces](towards_brain_swarm_interfaces.pdf)
+The folder [EXPERIMENTS](EXPERIMENTS) contains files for the experiments conducted in the paper: [Towards Brain Swarm Interfaces](towards_brain_swarm_interfaces.pdf)
