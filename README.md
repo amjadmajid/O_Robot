@@ -1,8 +1,6 @@
 # O_Robot
 O_Robot is a project working towards fully functional Brain Swarm Interfaces (BSI). It is meant as proof of concept for future development enabling multiple robots to be controlled using brain signals.
 
-[ROBOT documentation](ROBOT/readme.md)
-
 ## Hardware
 The hardware required for the project are:
 
@@ -57,6 +55,7 @@ Change line 32 of [ROBOT/RobotModel/include/differentialRobot.h](ROBOT/RobotMode
 
 Compile and flash [ROBOT/main.c](ROBOT/main.c) to the TI RSLK MAX.
 
+More information about the robot and its functioning can be found in the readme of the ROBOT folder: [ROBOT documentation](ROBOT/readme.md)
 
 ### Connecting everything:
 Connect the Mindwave Mobile to the Raspberry Pi using bluetoothctl as described in: [How to setup Bluetooth on a Raspberry Pi 3](https://www.cnet.com/tech/computing/how-to-setup-bluetooth-on-a-raspberry-pi-3/)
