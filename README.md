@@ -1,6 +1,26 @@
 # O_Robot
 O_Robot is a project working towards fully functional Brain Swarm Interfaces (BSI). It is meant as proof of concept for future development enabling multiple robots to be controlled using brain signals.
 
+## Hardware
+The hardware required for the project are:
+
+|                             | Hardware components                                           | Amount |
+|-----------------------------|---------------------------------------------------------------|--------|
+| Robot                       | TI Robotics System Learning Kit MAX (TI-RSLK MAX)             | 1      |
+|                             | Ultrasonic Sensor (HC-SR04) OR Infrared Sensor (GP2Y0A21YK0F) | 3      |
+|                             | ESP32 Devkit V1                                               | 1      |
+|                             | Jump wire                                                     | 16     |
+| Brain-Computer Interface    | Neurosky Mindwave Mobile V1                                   | 1      |
+| Central Communication Point | Raspberry PI 4B                                               | 1      |
+
+The following Languages and Programms were used to programm the hardware:
+
+|                                                   | Software programs                                                          | Software languages |
+|---------------------------------------------------|----------------------------------------------------------------------------|--------------------|
+| TI Robotics System Learning Kit MAX (TI-RSLK MAX) | [Texas Instruments Code Composer Studio](https://www.ti.com/tool/CCSTUDIO) | C                  |
+| ESP32 Devkit V1                                   | [Arduino IDE](https://www.arduino.cc/en/software)                          | C++                |
+| Raspberry PI 4B                                   | VS Code with Remote SSH extension                                          | Python             |
+
 ## Installation
 
 ### Programming the Raspberry Pi:
