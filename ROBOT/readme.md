@@ -20,7 +20,6 @@ TICK_DIS_NUMERATOR / TICK_DIS_DENOMINATOR =  2 * PI * RADIUS / TICKS_PER_REV
 ![Robot Measurements](robot_measurements.png)
 
 ## Pins
-
 All relevant pins for the TI RSLK MAX are:
 
 | TI-RSLK MAX |        |               |                 |
@@ -61,16 +60,15 @@ All relevant pins for the TI RSLK MAX are:
 |             | Right  | ERA           | P10.4           |
 | Clock       |        | Debugging     | P1.0            |
 
-## Obstacle avoidance (direction vector calculation)
+## Tachometer (position and angle update)
+After a tachometer interupt is triggered for either wheel a counter is increased for that wheel. After a certain time a timer is triggered which uses the counters for the tachometer to update the position and angle of the robot based on how much each wheel has turned.
 
+![Tachometer](tachometer.png)
+
+## Obstacle avoidance (direction vector calculation)
 The following image displays how the vector for obstacle avoidance is calculated using the measurements of the ultrasound/infrared sensors.
 
 ![Obstacle Avoidance](obstacle_avoidance.png)
 
 As seen for each sensor a vector is calculated relative to their position on the robot, these are then summed in order to receive a vector that points into a direction avoiding the obstacle.
 
-## Tachometer (position and angle update)
-
-After a tachometer interupt is triggered for either wheel a counter is increased for that wheel. After a certain time a timer is triggered which uses the counters for the tachometer to update the position and angle of the robot based on how much each wheel has turned.
-
-![Tachometer](tachometer.png)
