@@ -69,6 +69,9 @@ Connect the ESP32 to the TI RSLK MAX as follows:
 |   RX0 |        P3.3 |
 |   TX0 |        P3.2 |
 
+The entire setup should look something like this, where the number of robots may differ:
+![Global Test Setup](global_test_setup.png)
+
 ## Starting everything:
 Start the python server using ```sudo python3 MindwaveMobile.py``` on the Raspberry Pi.
 
