@@ -15,7 +15,9 @@ The hardware required for the project are:
 | Brain-Computer Interface    | Neurosky Mindwave Mobile V1                                   | 1      |
 | Central Communication Point | Raspberry PI 4B                                               | 1      |
 
-The following Languages and Programms were used to programm the hardware:
+
+## Software
+The following software programs and languages were used to programm the hardware:
 
 |                                                   | Software programs                                                          | Software languages |
 |---------------------------------------------------|----------------------------------------------------------------------------|--------------------|
